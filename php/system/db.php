@@ -1,118 +1,54 @@
 <?php
-// db_connection.php
+include "log.php";
+error_reporting(E_ALL & ~E_WARNING);
 
-class DBConnection {
-    private $host;
-    private $username;
-    private $password;
-    private $database;
-    private $conn;
+function pgQuery($sql, $count=false, $returning=false) {
+    // Нужно ввести свои данные
+    $host = "localhost";  // Используем имя сервиса из docker-compose
+    $dbname = "app_db";
+    $user = "app_user";
+    $password = "app_password";
+    $dbport = "5445";    // Стандартный порт PostgreSQL
 
-    public function __construct() {
-        $this->host = 'localhost'; // Ваш хост MySQL
-        $this->username = 'your_username'; // Ваш пользователь MySQL
-        $this->password = 'your_password'; // Ваш пароль MySQL
-        $this->database = 'rollershutters_db'; // Название вашей БД
-        
-        $this->connect();
-        $this->createTables();
+    $connection_string = "host=".$host." port=".$dbport." dbname=".$dbname." user=".$user." password=".$password;
+
+    $connection = pg_connect($connection_string);
+
+    if ($connection === false) {
+        logger("server", "connection_is_requested", "FAILURE: " . pg_last_error());
+        return false;
     }
 
-    private function connect() {
-        $this->conn = new mysqli($this->host, $this->username, $this->password, $this->database);
-        
-        if ($this->conn->connect_error) {
-            die("Connection failed: " . $this->conn->connect_error);
-        }
-        
-        $this->conn->set_charset("utf8mb4");
+    $stat = pg_connection_status($connection);
+    if ($stat === PGSQL_CONNECTION_BAD) {
+        logger("server", "connection_is_requested", "FAILURE");
+        pg_close($connection);
+        return false;
     }
 
-    private function createTables() {
-        $sql = [
-            "CREATE TABLE IF NOT EXISTS contacts (
-                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                data_name VARCHAR(12) NOT NULL,
-                data_value VARCHAR(100) NOT NULL,
-                show VARCHAR(20) NOT NULL
-            ) ENGINE=InnoDB",
-            
-            "CREATE TABLE IF NOT EXISTS quotes (
-                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                contact_id INT(6) UNSIGNED,
-                width DECIMAL(10,2),
-                height DECIMAL(10,2),
-                material ENUM('aluminum', 'steel') NOT NULL,
-                color VARCHAR(50),
-                automation TINYINT(1) DEFAULT 0,
-                notes TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (contact_id) REFERENCES contacts(id) ON DELETE CASCADE
-            ) ENGINE=InnoDB",
-            
-            "CREATE TABLE IF NOT EXISTS subscribers (
-                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                email VARCHAR(100) NOT NULL UNIQUE,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            ) ENGINE=InnoDB"
-        ];
+    logger("server", "connection_is_requested", "SUCCESS");
+    logger("server", "request_send", $sql);
 
-        foreach ($sql as $query) {
-            if (!$this->conn->query($query)) {
-                error_log("Error creating table: " . $this->conn->error);
-            }
+    $result = pg_query($connection, $sql);
+    $res = true;
+
+    if ($result === false) {
+        logger("DB", "response", "Query failed: " . pg_last_error($connection));
+        $res = false;
+    } elseif ($count) {
+        $res = pg_num_rows($result);
+    } elseif (stripos($sql, 'SELECT') === 0 || $returning) {
+        $res = [];
+        while ($row = pg_fetch_assoc($result)) {
+            $res[] = $row;
         }
     }
 
-    public function getConnection() {
-        return $this->conn;
+    if ($res) {
+        logger("server", "report", "data gathered");
     }
 
-    public function closeConnection() {
-        if ($this->conn) {
-            $this->conn->close();
-        }
-    }
-
-    // Метод для безопасного выполнения запросов
-    public function query($sql, $params = [], $types = '') {
-        $stmt = $this->conn->prepare($sql);
-        
-        if (!empty($params)) {
-            $stmt->bind_param($types, ...$params);
-        }
-        
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $stmt->close();
-        
-        return $result;
-    }
-
-    // Метод для вставки данных
-    public function insert($table, $data) {
-        $columns = implode(', ', array_keys($data));
-        $placeholders = implode(', ', array_fill(0, count($data), '?'));
-        $types = str_repeat('s', count($data));
-        $values = array_values($data);
-        
-        $sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param($types, ...$values);
-        $result = $stmt->execute();
-        $insertId = $stmt->insert_id;
-        $stmt->close();
-        
-        return $result ? $insertId : false;
-    }
-}
-
-// Создаем экземпляр подключения
-$db = new DBConnection();
-
-// Функция для удобного доступа к подключению
-function getDBConnection() {
-    global $db;
-    return $db->getConnection();
+    pg_close($connection);
+    return $res;
 }
 ?>
