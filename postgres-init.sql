@@ -9,3 +9,56 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+CREATE TABLE IF NOT EXISTS contacts (
+    id SERIAL PRIMARY KEY,
+    data_name VARCHAR(12) NOT NULL,
+    data_value VARCHAR(100) NOT NULL,
+    show_field VARCHAR(20) NOT NULL  -- 'show' это зарезервированное слово в PostgreSQL
+);
+
+CREATE TABLE IF NOT EXISTS projects (
+    id SERIAL PRIMARY KEY,
+	name VARCHAR(15) NOT NULL,
+    address VARCHAR(25) NOT NULL,
+    source VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS customer (
+    id SERIAL PRIMARY KEY,
+	name VARCHAR(15) NOT NULL,
+    address VARCHAR(25) NOT NULL,
+	feedback TEXT NOT NULL,
+    source VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS faq (
+    id SERIAL PRIMARY KEY,
+	question VARCHAR(15) NOT NULL,
+    answer TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS brand (
+    id SERIAL PRIMARY KEY,
+	source VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS quotes (
+    id SERIAL PRIMARY KEY,
+    contact_id INTEGER REFERENCES contacts(id) ON DELETE CASCADE,
+    width DECIMAL(10,2),
+    height DECIMAL(10,2),
+    material VARCHAR(20) CHECK (material IN ('aluminum', 'steel')) NOT NULL,
+    color VARCHAR(50),
+    automation BOOLEAN DEFAULT FALSE,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS subscribers (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
