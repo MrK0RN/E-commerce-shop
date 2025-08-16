@@ -183,14 +183,34 @@
     </section>
     
     <!-- Testimonials -->
-    <?php
-	include("assets/feedback.php");
-	?>
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+                <p>Hear from homeowners and business owners who chose our roller shutters</p>
+            </div>
+            <div class="testimonial-slider">
+                <div class="testimonial">
+                    <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Sarah J." class="testimonial-avatar">
+                    <p class="testimonial-text">"The roller shutters have made such a difference to our home. Not only do they look great, but we feel much more secure and our energy bills have noticeably decreased."</p>
+                    <h4 class="testimonial-author">Sarah J.</h4>
+                    <p class="testimonial-role">Homeowner, London</p>
+                </div>
+            </div>
+        </div>
+    </section>
     
     <!-- Brands -->
-    <?php
-	include("assets/brands.php");
-	?>
+    <section class="brands">
+        <div class="container">
+            <div class="brands-container">
+                <img src="https://via.placeholder.com/150x60?text=Brand+1" alt="Brand 1" class="brand-logo">
+                <img src="https://via.placeholder.com/150x60?text=Brand+2" alt="Brand 2" class="brand-logo">
+                <img src="https://via.placeholder.com/150x60?text=Brand+3" alt="Brand 3" class="brand-logo">
+                <img src="https://via.placeholder.com/150x60?text=Brand+4" alt="Brand 4" class="brand-logo">
+            </div>
+        </div>
+    </section>
     
     <!-- Contact Section -->
     <section class="contact" id="contact">

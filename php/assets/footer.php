@@ -1,5 +1,3 @@
-
-
 <footer>
 	<div class="container">
 		<div class="footer-container">
@@ -7,15 +5,10 @@
 				<h3>RollerShutters</h3>
 				<p>Providing high-quality roller shutters for homes and businesses across the UK since 2005.</p>
 				<div class="social-links">
-				<?php
-				foreach ($g as $sc) {
-					$sc 
-				}
 					<a href="#"><i class="fab fa-facebook-f"></i></a>
 					<a href="#"><i class="fab fa-twitter"></i></a>
 					<a href="#"><i class="fab fa-instagram"></i></a>
 					<a href="#"><i class="fab fa-linkedin-in"></i></a>
-				?>
 				</div>
 			</div>
 			<div class="footer-col">
