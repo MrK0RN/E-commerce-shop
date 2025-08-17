@@ -9,11 +9,21 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS admins (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(32) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS contacts (
     id SERIAL PRIMARY KEY,
     data_name VARCHAR(12) NOT NULL,
     data_value VARCHAR(100) NOT NULL,
-    show_field VARCHAR(20) NOT NULL  -- 'show' это зарезервированное слово в PostgreSQL
+    block VARCHAR(100) NOT NULL,
+    sect VARCHAR(100) NOT NULL,
+    show_field VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS projects (
