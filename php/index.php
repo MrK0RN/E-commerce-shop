@@ -13,7 +13,7 @@
 <body>
     <!-- Timer -->
     <?php
-	include("assets/header.php");
+	include "assets/header.php";
 	?>
     
     <!-- Hero Section -->
@@ -184,12 +184,12 @@
     
     <!-- Testimonials -->
     <?php
-	include("assets/feedback.php");
+	include "assets/feedback.php";
 	?>
     
     <!-- Brands -->
     <?php
-	include("assets/brands.php");
+	include "assets/brands.php";
 	?>
     
     <!-- Contact Section -->
@@ -259,7 +259,7 @@
     
     <!-- Footer -->
     <?php
-	include("assets/footer.php");
+	include "assets/footer.php";
 	?>
     
     <!-- Chat Widget -->

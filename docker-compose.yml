@@ -13,7 +13,7 @@ services:
       DB_USER: postgres
       DB_PASS: secret
       DB_NAME: app_db
-      DB_PORT: 5445
+      DB_PORT: 5432
     networks:
       - app-network
 
@@ -34,7 +34,7 @@ services:
     networks:
       - app-network
     ports:
-      - "5445:5445"
+      - "5432:5432"
 
   phpmyadmin:
     image: adminer  # Альтернатива phpMyAdmin для PostgreSQL

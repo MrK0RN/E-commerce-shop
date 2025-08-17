@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
+    libpq-dev \
     zip \
     unzip \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
@@ -19,6 +20,8 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     gd \
     zip \
+    pdo_pgsql \
+    pgsql \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

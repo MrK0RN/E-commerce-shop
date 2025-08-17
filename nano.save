@@ -1,0 +1,68 @@
+ apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libwebp-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    libpq-dev \  # Добавляем для поддержки PostgreSQL
+    zip \
+    unzip \
+    git \
+    && docker-php-ext-configure gd --with-jpeg --with-webp \
+    && docker-php-ext-install \
+    pdo \
+    pdo_pgsql \  # Добавляем расширение PostgreSQL
+    pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip \
+    opcache \  # Добавляем opcache для улучшения производительности
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Включаем модули Apache
+RUN a2enmod rewrite headers
+
+# Создаем необходимые директории
+RUN mkdir -p /var/www/html/storage \
+    && mkdir -p /var/www/html/bootstrap/cache
+
+# Копируем файлы проекта (исключая node_modules и другие ненужные директории)
+COPY . /var/www/html/
+
+# Устанавливаем правильные права
+RUN chown -R www-data:www-data /var/www/html \
+    && find /var/www/html -type d -exec chmod 755 {} \; \
+    && find /var/www/html -type f -exec chmod 644 {} \; \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache \
+    && chmod +x /var/www/html/artisan  # Если используется Laravel
+
+# Настройка PHP
+COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Базовая конфигурация Apache (без внешнего файла)
+RUN echo "<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        Options Indexes FollowSymLinks\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+    ErrorLog \${APACHE_LOG_DIR}/error.log\n\
+    CustomLog \${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>" > /etc/apache2/sites-available/000-default.conf
+
+# Установка зависимостей Composer (если нужно)
+# RUN composer install --no-dev --optimize-autoloader
+
+WORKDIR /var/www/html
+EXPOSE 80
+CMD ["apache2-foreground"]

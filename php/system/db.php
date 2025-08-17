@@ -4,11 +4,11 @@ error_reporting(E_ALL & ~E_WARNING);
 
 function pgQuery($sql, $count=false, $returning=false) {
     // Нужно ввести свои данные
-    $host = "localhost";  // Используем имя сервиса из docker-compose
+    $host = "db";  // Используем имя сервиса из docker-compose
     $dbname = "app_db";
     $user = "app_user";
     $password = "app_password";
-    $dbport = "5445";    // Стандартный порт PostgreSQL
+    $dbport = "5432";    // Стандартный порт PostgreSQL
 
     $connection_string = "host=".$host." port=".$dbport." dbname=".$dbname." user=".$user." password=".$password;
 

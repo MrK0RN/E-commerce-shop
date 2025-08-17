@@ -6,7 +6,7 @@
 				<p>Providing high-quality roller shutters for homes and businesses across the UK since 2005.</p>
 				<div class="social-links">
 					<?php 
-						include("modules/SocNetwork.php");
+						include "modules/SocNetwork.php";
 					?>
 				</div>
 			</div>

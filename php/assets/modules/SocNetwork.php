@@ -1,5 +1,9 @@
 <?php
-include("../system/db.php");
+
+$baseDir = __DIR__ . '/../../';
+$dbFile = $baseDir . 'system/db.php';
+
+include $dbFile;
 
 $g = pgQuery("SELECT * FROM contacts WHERE block = 'footer' AND sect = 'sc' AND show = True;");
 
