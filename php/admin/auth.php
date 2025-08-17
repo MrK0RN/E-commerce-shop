@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', '0');
 session_start();
 if (!isset($_SESSION["auth"])){
 	echo "<script>window.location.href = 'login.php';</script>";

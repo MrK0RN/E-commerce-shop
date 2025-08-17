@@ -1,4 +1,5 @@
 <?php
+include "auth.php";
 $title = "Товары - Админ панель";
 
 include "template/goods.php";
