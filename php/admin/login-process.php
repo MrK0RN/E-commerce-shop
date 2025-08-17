@@ -10,7 +10,7 @@ if ($username == "admin" && $password == "admin") {
 	$_SESSION['auth'] = true;
 	
 	// Перенаправляем в админ-панель
-	header('Location: index.php');
+	echo "<script>window.location.href = 'index.php';</script>";
 	exit();
 }
 
@@ -25,12 +25,14 @@ if (count($result) === 1) {
         $_SESSION['auth'] = true;
         
         // Перенаправляем в админ-панель
-        header('Location: index.php');
+        echo "<script>window.location.href = 'index.php';</script>";
         exit();
     }
+} else {
+	echo "<script>window.location.href = 'login.php';</script>";
+        exit();
 }
 
 // Если дошли сюда - авторизация не удалась
-header('Location: login.php);
-exit();
+
 ?>

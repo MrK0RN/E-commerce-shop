@@ -1,8 +1,6 @@
 <?php
 include "auth.php";
 include "../system/db.php";
-
-g = 
 ?>
 
 <!DOCTYPE html>

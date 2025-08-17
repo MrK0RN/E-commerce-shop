@@ -1,34 +1,34 @@
 <?php
 $currentFile = basename($_SERVER['PHP_SELF']);
 
-text2 = "<div class="sidebar">
-			<div class="sidebar-header">
+$text2 = "<div class='sidebar'>
+			<div class='sidebar-header'>
 				<h2>Админ Панель</h2>
 			</div>
-			<div class="sidebar-menu">"
+			<div class='sidebar-menu'>";
 
 $pages = ["Главная" => "index.php", 
 		  "Товары" => "goods.php", 
 		  "Заказы" => "orders.php",
 		  "Контакты" => "contacts.php",
-		  "Админы" => "admins.php"]
+		  "Админы" => "admins.php"];
 		
 	  
-foreach ($pages as $page) {
-	if ($currentFile == $pages[$page]){
-	text2 .= "<a href='".$pages[$page]."' class='active menu-item'>
+foreach ($pages as $page => $address) {
+	if ($currentFile == $address){
+		$text2 .= "<a href='".$address."' class='active menu-item'>
 			 ".$page."
 	</a>";
 	} else {
-		text2 .= "<a href='".$pages[$page]."' class='menu-item'>
+		$text2 .= "<a href='".$address."' class='menu-item'>
 			 ".$page."
 	</a>";
 	}
 }		  
 
-text2 .= "</div></div>"
+$text2 .= "</div></div>";
 
-echo text2;
+echo $text2;
 
 ?>
 
@@ -60,4 +60,5 @@ echo text2;
 	</div>
 </div>
 -->
+
 
