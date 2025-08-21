@@ -4,12 +4,16 @@ include "../../system/db.php";
 $table_name = $_GET["table_name"];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $fields = array_keys($_POST);
-    $values = array_map(function($v) { return "'" . addslashes($v) . "'"; }, array_values($_POST));
+    // Исключить из POST-обработки
+    $fields = array_filter(array_keys($_POST), function($k) {
+        return $k !== 'id' && $k !== 'created_at' && $k !== 'updated_at';
+    });
+    $values = array_map(function($v) { return "'" . addslashes($v) . "'"; }, array_intersect_key(array_values($_POST), array_flip($fields)));
     if (isset($_GET["edit_id"])) {
         // Обновление записи
         $set = [];
         foreach ($_POST as $key => $value) {
+            if ($key === 'id' || $key === 'created_at' || $key === 'updated_at') continue;
             $set[] = "$key = '" . addslashes($value) . "'";
         }
         $set_str = implode(", ", $set);
@@ -55,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_GET["edit_id"])){
         $responce = pgQuery("SELECT * FROM ".$table_name." WHERE id = ".$_GET["edit_id"].";")[0];
         foreach ($responce as $key => $value) {
-            if ($key === 'id') continue;
+            if ($key === 'id' || $key === 'created_at' || $key === 'updated_at') continue;
             $text2 .= "<div class='form-group'>";
             $text2 .= "<label for='".$key."'>".$key."</label>";
             $text2 .= "<input type='text' id='".$key."' name='".$key."' class='form-control' value='".$value."' required>";
@@ -64,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $responce = pgQuery("SELECT column_name FROM information_schema.columns WHERE table_name = '".$table_name."';");
         foreach ($responce as $row) {
-            if ($row["column_name"] === 'id') continue;
+            if ($row["column_name"] === 'id' || $row["column_name"] === 'created_at' || $row["column_name"] === 'updated_at') continue;
             $text2 .= "<div class='form-group'>";
             $text2 .= "<label for='".$row["column_name"]."'>".$row["column_name"]."</label>";
             $text2 .= "<input type='text' id='".$row["column_name"]."' name='".$row["column_name"]."' class='form-control' placeholder='Enter your ".$row["column_name"]."' required>";
