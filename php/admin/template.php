@@ -12,6 +12,8 @@ include "auth.php";
 	?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/tables.css">
+	<link rel="stylesheet" href="css/products.css">
     <?php if (file_exists(__DIR__.'/css/goods.css')): ?>
     <link rel="stylesheet" href="css/goods.css?v=<?=time()?>">
     <?php endif; ?>
