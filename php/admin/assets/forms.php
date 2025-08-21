@@ -3,9 +3,34 @@ include "../../system/db.php";
 $table_name = $_GET["table_name"];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    echo "<pre>";
-    print_r($_POST);
-    echo "</pre>";
+    $fields = array_keys($_POST);
+    $values = array_map(function($v) { return "'" . addslashes($v) . "'"; }, array_values($_POST));
+    if (isset($_GET["edit_id"])) {
+        // Обновление записи
+        $set = [];
+        foreach ($_POST as $key => $value) {
+            $set[] = "$key = '" . addslashes($value) . "'";
+        }
+        $set_str = implode(", ", $set);
+        $sql = "UPDATE $table_name SET $set_str WHERE id = '" . addslashes($_GET["edit_id"]) . "'";
+        $result = pgQuery($sql);
+        if ($result !== false) {
+            echo "<div class='success'>Запись успешно обновлена!</div>";
+        } else {
+            echo "<div class='error'>Ошибка при обновлении записи!</div>";
+        }
+    } else {
+        // Вставка новой записи
+        $fields_str = implode(", ", $fields);
+        $values_str = implode(", ", $values);
+        $sql = "INSERT INTO $table_name ($fields_str) VALUES ($values_str)";
+        $result = pgQuery($sql);
+        if ($result !== false) {
+            echo "<div class='success'>Запись успешно добавлена!</div>";
+        } else {
+            echo "<div class='error'>Ошибка при добавлении записи!</div>";
+        }
+    }
 } else {
     $text2 = "<!DOCTYPE html>
     <html lang='en'>
@@ -27,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         foreach ($responce as $key => $value) {
             $text2 .= "<div class='form-group'>";
             $text2 .= "<label for= '".$key."'>".$key."</label>";
-            $text2 .= "<input type='text' id='".$key."' name='".$key."' class='form-control' value='".$key."' required>";
+            $text2 .= "<input type='text' id='".$key."' name='".$key."' class='form-control' value='".$value."' required>";
             $text2 .= "</div>";
         }    
     } else {
@@ -39,7 +64,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $text2 .= "</div>";
         }    
     }
-    $text2 .= "</form></div></body></html>";
+    $text2 .= "<button type="submit" class="submit-btn">Submit Form</button>
+            <button type="button" class="submit-btn btn-cancel">Cancel</button>
+        </form></form></div></body></html>";
     echo $text2;
 }
 
