@@ -1,6 +1,5 @@
 <?php
 include "auth.php";
-include "../system/db.php";
 ?>
 
 <!DOCTYPE html>

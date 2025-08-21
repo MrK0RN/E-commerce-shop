@@ -5,7 +5,7 @@ $dbFile = $baseDir . 'system/db.php';
 
 include $dbFile;
 
-$g = pgQuery("SELECT * FROM contacts WHERE block = 'footer' AND sect = 'sc' AND show_field = True;");
+$g = pgQuery("SELECT * FROM contacts WHERE block = 'footer' AND sect = 'sc' AND show_field = 'True';");
 
 $socials = [
 	"facebook" => "fa-facebook-f",

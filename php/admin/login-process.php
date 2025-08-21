@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "../system/db.php";
 
 // Получаем данные из формы
@@ -6,10 +7,11 @@ $username = $_POST['username'] ?? '';
 $password = $_POST['password'] ?? '';
 
 if ($username == "admin" && $password == "admin") {
-	session_start();
 	$_SESSION['auth'] = true;
 	
 	// Перенаправляем в админ-панель
+	
+	echo "";
 	echo "<script>window.location.href = 'index.php';</script>";
 	exit();
 }
@@ -29,7 +31,7 @@ if (count($result) === 1) {
         exit();
     }
 } else {
-	echo "<script>window.location.href = 'login.php';</script>";
+	//echo "<script>window.location.href = 'login.php';</script>";
         exit();
 }
 
