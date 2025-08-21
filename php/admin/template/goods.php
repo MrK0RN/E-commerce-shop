@@ -2,7 +2,6 @@
 
 $main = '
 <div class="products-header">
-    <h1>Товары</h1>
     <button class="add-btn" onclick="window.location.href=\'assets/product_form.php\'">Добавить товар</button>
     <input type="text" id="search" class="search-box" placeholder="Поиск по названию...">
 </div>

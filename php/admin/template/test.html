@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог рольставен</title>
+    <style>
+        :root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --accent: #e74c3c;
+    --light: #ecf0f1;
+    --dark: #2c3e50;
+    --gray: #95a5a6;
+    --text: #333333;
+    --border: #e0e0e0;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        color: var(--text);
+        line-height: 1.6;
+        background: #f9f9f9;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Стили элемента каталога */
+    .element-item {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .element-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .basic-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .element-item__block-image {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .picture {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .picture img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .element-item:hover .picture img {
+        transform: scale(1.05);
+    }
+
+    .element-item__block-param {
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    .title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .description-action {
+        background: none;
+        border: none;
+        color: var(--secondary);
+        cursor: pointer;
+        font-size: 14px;
+        padding: 5px 0;
+        margin-bottom: 15px;
+        text-decoration: underline;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .description-action:hover {
+        color: var(--accent);
+    }
+
+    .description-action::after {
+        content: "▼";
+        font-size: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .description-action.active::after {
+        transform: rotate(180deg);
+    }
+
+    .description {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .description.active {
+        max-height: 500px;
+    }
+
+    .params {
+        list-style: none;
+        margin-bottom: 15px;
+    }
+
+    .params li {
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .params li:last-child {
+        border-bottom: none;
+    }
+
+    .params li::before {
+        content: "•";
+        position: absolute;
+        left: 10px;
+        color: var(--accent);
+        font-weight: bold;
+    }
+
+    .options {
+        margin-top: 15px;
+    }
+
+    .options__title {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--primary);
+    }
+
+    .option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+    }
+
+    .option.checked::before {
+        content: "✓";
+        color: var(--accent);
+        font-weight: bold;
+        width: 20px;
+        height: 20px;
+        background: #f8f9fa;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .element-item__block-trade {
+        padding: 20px;
+        background: #f8f9fa;
+        border-top: 1px solid var(--border);
+    }
+
+    .price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .price__title {
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .price__value {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--accent);
+    }
+
+    .actions {
+        margin-top: 15px;
+    }
+
+    .actions__wrapper {
+        display: flex;
+        gap: 15px;
+    }
+
+    .actions-button {
+        flex: 1;
+        padding: 15px 20px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid var(--primary);
+    }
+
+    .actions-button:not(.inverse) {
+        background: var(--primary);
+        color: white;
+    }
+
+    .actions-button:not(.inverse):hover {
+        background: #2a3f5d;
+        border-color: #2a3f5d;
+    }
+
+    .actions-button.inverse {
+        background: transparent;
+        color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .actions-button.inverse:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Адаптивность */
+    @media (min-width: 768px) {
+        .basic-wrapper {
+            flex-direction: row;
+        }
+        
+        .element-item__block-image {
+            width: 40%;
+            min-width: 300px;
+        }
+        
+        .element-item__block-param {
+            width: 60%;
+        }
+        
+        .picture {
+            height: 100%;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .actions__wrapper {
+            flex-direction: column;
+        }
+        
+        .price {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 18px;
+        }
+        
+        .actions-button {
+            padding: 12px 15px;
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .element-item__block-param,
+        .element-item__block-trade {
+            padding: 15px;
+        }
+        
+        .picture {
+            height: 200px;
+        }
+        
+        .params li {
+            padding: 6px 0;
+            padding-left: 20px;
+            font-size: 14px;
+        }
+    }
+
+    /* Анимации */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .element-item {
+        animation: fadeIn 0.5s ease;
+    }
+
+    /* Дополнительные стили для улучшения UX */
+    .element-item__block-image::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+    }
+
+    .element-item:hover .element-item__block-image::before {
+        opacity: 1;
+    }
+
+    /* Стили для скрытого контента */
+    .hidden-content {
+        display: none;
+    }
+    /* Убираем стили для раскрывающегося описания */
+    .description-action,
+    .description-action::after,
+    .description-action.active::after,
+    .description,
+    .description.active {
+        display: none !important;
+    }
+
+    /* Показываем параметры и опции постоянно */
+    .params,
+    .options {
+        display: block !important;
+        max-height: none !important;
+        opacity: 1 !important;
+    }
+
+    /* Располагаем параметры и опции в ряд */
+    .element-item__block-param {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .params-and-options {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .params {
+        flex: 1;
+        min-width: 200px;
+        margin-bottom: 0 !important;
+    }
+
+    .options {
+        flex: 1;
+        min-width: 200px;
+        margin-top: 0 !important;
+    }
+
+    /* Адаптивность для ряда */
+    @media (max-width: 768px) {
+        .params-and-options {
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .params,
+        .options {
+            min-width: 100%;
+        }
+    }
+
+    /* Убираем ненужные отступы */
+    .element-item__block-param {
+        padding-bottom: 10px;
+    }
+    .params-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    /* Выравниваем заголовки параметров и опций */
+    .params-header,
+    .options__title {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--primary);
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Делаем отступ между заголовком и списком */
+    .params-header + .params {
+        margin-top: 5px;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Пример элемента каталога -->
+        <div class="element-item">
+            <div class="basic-wrapper">
+                <div class="element-item__block-image">
+                    <div class="picture">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop" alt="Стальные рулонные ворота">
+                    </div>
+                </div>
+                
+                <div class="element-item__block-param">
+                    <div class="title">Стальные рулонные ворота</div>
+                    
+                    <div class="params-and-options">
+                        <div class="params-group">
+                            <div class="params-header">Характеристики:</div>
+                            <ul class="params">
+                                <li>шириной до 11 800 мм</li>
+                                <li>высотой до 6 300 мм</li>
+                                <li>площадью до 50 м²</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="options-group">
+                            <div class="options__title">Опции:</div>
+                            <div class="option checked">
+                                <div>стальной сплошной профиль</div>
+                            </div>
+                            <div class="option checked">
+                                <div>стальной перфорированный профиль</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="element-item__block-trade">
+                <div class="price">
+                    <div class="price__title">Цена:</div>
+                    <div class="price__value">от 40 000</div>
+                </div>
+                
+                <div class="actions">
+                    <div class="actions__wrapper">
+                        <a class="actions-button" href="#details">Подробнее</a>
+                        <button class="actions-button inverse" onclick="calculatePrice()">
+                            Рассчитать
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Второй пример элемента -->
+        <div class="element-item">
+            <div class="basic-wrapper">
+                <div class="element-item__block-image">
+                    <div class="picture">
+                        <img src="https://images.unsplash.com/photo-1600585152227-4f24156e55e3?w=400&h=300&fit=crop" alt="Алюминиевые рольставни">
+                    </div>
+                </div>
+                
+                <div class="element-item__block-param">
+                    <div class="title">Алюминиевые рольставни Премиум</div>
+                    
+                    <button type="button" class="description-action">Описание</button>
+                    
+                    <div class="description">
+                        <ul class="params">
+                            <li>шириной до 5 000 мм</li>
+                            <li>высотой до 4 000 мм</li>
+                            <li>площадью до 20 м²</li>
+                            <li>вес конструкции до 150 кг</li>
+                        </ul>
+                        
+                        <div class="options">
+                            <div class="options__title">Опции:</div>
+                            <div class="option checked">
+                                <div>автоматическое управление</div>
+                            </div>
+                            <div class="option checked">
+                                <div>пульт ДУ</div>
+                            </div>
+                            <div class="option checked">
+                                <div>защита от взлома</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="element-item__block-trade">
+                <div class="price">
+                    <div class="price__title">Цена:</div>
+                    <div class="price__value">от 25 000 ₽</div>
+                </div>
+                
+                <div class="actions">
+                    <div class="actions__wrapper">
+                        <a class="actions-button" href="#details">Подробнее</a>
+                        <button class="actions-button inverse" onclick="calculatePrice()">
+                            Рассчитать
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
