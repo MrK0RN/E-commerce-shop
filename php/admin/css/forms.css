@@ -182,3 +182,25 @@ select.form-control {
     color: var(--accent);
     border: 1px solid var(--accent);
 }
+
+.error {
+    color: #fff;
+    background: #e74c3c;
+    border: 1px solid #c0392b;
+    padding: 12px 20px;
+    margin: 15px 0;
+    border-radius: 4px;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+.success {
+    color: #fff;
+    background: #27ae60;
+    border: 1px solid #1e8449;
+    padding: 12px 20px;
+    margin: 15px 0;
+    border-radius: 4px;
+    font-size: 1.1em;
+    text-align: center;
+}

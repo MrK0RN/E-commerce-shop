@@ -2,7 +2,6 @@
 //$table_name, $add_src, $edit, $delete
 include "../system/db.php";
 $responce = pgQuery("SELECT * FROM ".$table_name.";");
-var_dump($responce);
 $text2 = '
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/tables.css">';
@@ -11,7 +10,7 @@ $text2 .= '
     <!-- Элементы управления таблицей -->
     <div class="table-controls">
         <input type="text" class="search-box" placeholder="Поиск...">
-        <a class="add-btn" href="'.$add_src.'">
+        <a class="add-btn" href="assets/forms.php?table_name='.$table_name.'">
             <i class="fas fa-plus"></i> Добавить
         </a>
     </div>';
@@ -22,19 +21,6 @@ $tableHead = '<!-- Таблица -->
 $tableBody = "</tr>
 		</thead>
 		<tbody>";
-$rowEnd = "<td>";
-
-if ($edit == true){
-	$rowEnd .= '<button class="action-btn edit-btn">
-						<i class="fas fa-edit"></i> Изменить
-					</button>';
-}
-if ($delete == true){
-	$rowEnd .= '<button class="action-btn delete-btn">
-						<i class="fas fa-trash"></i> Удалить
-					</button>';
-}
-$rowEnd .= "</td>";
 
 	
 foreach ($responce[0] as $key => $value) {
@@ -43,6 +29,22 @@ foreach ($responce[0] as $key => $value) {
 $tableHead .= "<th>Действия</th>";
 foreach ($responce as $unique) {
 	$tableBody.= "<tr>";
+	$cur_id = $unique["id"];
+
+	$rowEnd = "<td>";
+
+	if ($edit == true){
+		$rowEnd .= '<button class="action-btn edit-btn" href="assets/forms.php?table_name='.$table_name.'?edit_id='.$cur_id.'">
+							<i class="fas fa-edit"></i> Изменить
+						</button>';
+	}
+	if ($delete == true){
+		$rowEnd .= '<button class="action-btn delete-btn" href="assets/forms.php?table_name='.$table_name.'?edit_id='.$cur_id.'">
+							<i class="fas fa-trash"></i> Удалить
+						</button>';
+	}
+	$rowEnd .= "</td>";
+
 	foreach ($unique as $key => $value) {
 		if ($key == "status"){
 			$tableBody.= "<td><span class='status '".$value.">".$value."</span></td>";
@@ -59,5 +61,4 @@ $tableBody .= "</tbody>
 
 $text2 .= $tableHead;
 $text2 .= $tableBody;
-
 ?>

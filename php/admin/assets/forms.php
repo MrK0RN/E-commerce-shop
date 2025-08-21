@@ -15,7 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "UPDATE $table_name SET $set_str WHERE id = '" . addslashes($_GET["edit_id"]) . "'";
         $result = pgQuery($sql);
         if ($result !== false) {
-            echo "<div class='success'>Запись успешно обновлена!</div>";
+            echo "<div class='success'>Запись успешно обновлена! Перенаправление...</div>";
+            echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 3000);</script>";
         } else {
             echo "<div class='error'>Ошибка при обновлении записи!</div>";
         }
@@ -26,7 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "INSERT INTO $table_name ($fields_str) VALUES ($values_str)";
         $result = pgQuery($sql);
         if ($result !== false) {
-            echo "<div class='success'>Запись успешно добавлена!</div>";
+            echo "<div class='success'>Запись успешно добавлена! Перенаправление...</div>";
+            echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 3000);</script>";
         } else {
             echo "<div class='error'>Ошибка при добавлении записи!</div>";
         }
