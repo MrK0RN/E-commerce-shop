@@ -1,4 +1,5 @@
 <?php
+include "../auth.php";
 include "../../system/db.php";
 
 if (!isset($_GET["id"]) || !isset($_GET["table_name"])) {

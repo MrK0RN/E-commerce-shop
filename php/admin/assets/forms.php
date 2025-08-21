@@ -1,4 +1,5 @@
 <?php 
+include "../auth.php";
 include "../../system/db.php";
 $table_name = $_GET["table_name"];
 

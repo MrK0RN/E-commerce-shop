@@ -20,8 +20,8 @@ if ($username == "admin" && $password == "admin") {
 $result = pgQuery("SELECT id, username, password FROM admins WHERE username = '$username'");
 
 if (count($result) === 1) {
-    // Проверяем пароль (MD5 хеш)
-    if (md5($password) === $result[0]['password']) {
+    // Проверяем пароль
+    if ($password === $result[0]['password']) {
         // Авторизация успешна
 		session_start();
         $_SESSION['auth'] = true;
@@ -31,8 +31,8 @@ if (count($result) === 1) {
         exit();
     }
 } else {
-	//echo "<script>window.location.href = 'login.php';</script>";
-        exit();
+	echo "<script>window.location.href = 'login.php';</script>";
+    exit();
 }
 
 // Если дошли сюда - авторизация не удалась
