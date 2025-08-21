@@ -34,12 +34,12 @@ foreach ($responce as $unique) {
 	$rowEnd = "<td>";
 
 	if ($edit == true){
-		$rowEnd .= '<button class="action-btn edit-btn" href="assets/forms.php?table_name='.$table_name.'?edit_id='.$cur_id.'">
+		$rowEnd .= '<button class="action-btn edit-btn" onclick="window.location.href=\'assets/forms.php?table_name=$table_name&edit_id=$cur_id\'">
 							<i class="fas fa-edit"></i> Изменить
 						</button>';
 	}
 	if ($delete == true){
-		$rowEnd .= '<button class="action-btn delete-btn" href="assets/forms.php?table_name='.$table_name.'?edit_id='.$cur_id.'">
+		$rowEnd .= '<button class="action-btn delete-btn" onclick="window.location.href=\'assets/delete.php?table_name=$table_name&id=$cur_id\'">
 							<i class="fas fa-trash"></i> Удалить
 						</button>';
 	}
