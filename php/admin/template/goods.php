@@ -6,8 +6,9 @@ $main = '
     <button onclick="window.location.href=\'assets/product_form.php\'">Добавить товар</button>
     <input type="text" id="search" placeholder="Поиск по названию...">
 </div>
-<div class="products-gallery">
-    <?php foreach ($responce as $product): ?>
+<div class="products-gallery">';
+foreach ($responce as $product){
+    main .= '
         <div class="product-card">
             <div class="product-thumb">
                 <img src="'.
@@ -22,10 +23,8 @@ $main = '
                     <button class="delete-btn" onclick="window.location.href=\'assets/delete.php?table_name=products&id='.$product['id'].'\'">Удалить</button>
                 </div>
             </div>
-        </div>
-    <?php endforeach; ?>
-</div>';
+        </div>';
+    }
 
-
-
+main .= '</div>';
 ?>
