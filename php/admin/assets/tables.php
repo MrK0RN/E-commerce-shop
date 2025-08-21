@@ -4,7 +4,7 @@ include "../system/db.php";
 $responce = pgQuery("SELECT * FROM ".$table_name.";");
 $text2 = '
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/tables.css">';
+    <link rel="stylesheet" href="css/tables.css?v1.0">';
  
 $text2 .= '
     <!-- Элементы управления таблицей -->
