@@ -19,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 3000);</script>";
         } else {
             echo "<div class='error'>Ошибка при обновлении записи!</div>";
+            echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 3000);</script>";
         }
     } else {
         // Вставка новой записи
@@ -31,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 3000);</script>";
         } else {
             echo "<div class='error'>Ошибка при добавлении записи!</div>";
+            echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 3000);</script>";
         }
     }
 } else {
