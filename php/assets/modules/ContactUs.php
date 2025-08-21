@@ -1,7 +1,7 @@
 <?php
 include("system/db.php");
 
-$g = pgQuery("SELECT * FROM contacts WHERE block = 'footer' AND sect = 'cu' AND show = True;");
+$g = pgQuery("SELECT * FROM contacts WHERE block = 'footer' AND sect = 'rc' AND show = True;");
 
 $cont = [
 	"address" => "fa-map-marker-alt",
