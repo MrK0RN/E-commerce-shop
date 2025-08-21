@@ -7,7 +7,7 @@ $responce = pgQuery("SELECT * FROM products ORDER BY id DESC;");
 <head>
     <meta charset="UTF-8">
     <title>Товары — Галерея</title>
-    <link rel="stylesheet" href="assets/css/products.css?v=<?=time()?>">
+    <link rel="stylesheet" href="css/products.css?v<?=time()?>">
 </head>
 <body>
     <div class="products-header">
