@@ -1,6 +1,6 @@
 <?php
 include "auth.php";
-$title = "Товары - Админ панель";
+$title = "Товары";
 
 include "template/goods.php";
 include "template.php";

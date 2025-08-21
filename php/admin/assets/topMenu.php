@@ -1,6 +1,8 @@
-<header>
+<?php
+
+echo "<header>
 	<div class='header'>
-		<h1>Главная панель</h1>
+		<h1>".$title."</h1>
 		<div class='user-info'>
 			<img src='https://ui-avatars.com/api/?name=Admin&background=2c3e50&color=fff' alt='Admin'>
 			<div>
@@ -9,5 +11,6 @@
 			</div>
 		</div>
 	</div>
-</header>
+</header>";
+?>
 

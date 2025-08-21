@@ -1,5 +1,5 @@
 <?php
-$title = "Главная - Админ панель";
+$title = "Главная";
 
 include "template/index.php";
 include "template.php";

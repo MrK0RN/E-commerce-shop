@@ -1,6 +1,6 @@
 <?php
 include "auth.php";
-$title = "Контакты - Админ панель";
+$title = "Контакты";
 
 include "template/contacts.php";
 include "template.php";
