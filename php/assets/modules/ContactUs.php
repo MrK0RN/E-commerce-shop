@@ -1,5 +1,5 @@
 <?php
-include("../system/db.php");
+include("system/db.php");
 
 $g = pgQuery("SELECT * FROM contacts WHERE block = 'footer' AND sect = 'cu' AND show = True;");
 
