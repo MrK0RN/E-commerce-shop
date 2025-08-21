@@ -8,7 +8,7 @@ $main = '
 </div>
 <div class="products-gallery">';
 foreach ($responce as $product){
-    main .= '
+    $main .= '
         <div class="product-card">
             <div class="product-thumb">
                 <img src="'.
@@ -26,5 +26,5 @@ foreach ($responce as $product){
         </div>';
     }
 
-main .= '</div>';
+$main .= '</div>';
 ?>
