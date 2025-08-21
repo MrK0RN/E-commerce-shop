@@ -7,8 +7,9 @@ $cont = [
 	"address" => "fa-map-marker-alt",
 	"phone" => "fa-phone-alt",
 	"mail" => "fa-envelope"
-]
+];
 
 foreach ($g as $sc) {
 	echo "<li><i class='fas ".$cont[$sc["data_name"]]."'></i> ".$sc["data_value"]."</li>";
+}
 ?>
