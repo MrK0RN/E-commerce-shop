@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <title>Standard Form</title>
-        <link rel='stylesheet' href='../css/styles.css'>
+        <link rel='stylesheet' href='../css/forms.css'>
         <!-- You might also want to link to a global admin style if it exists -->
         <!-- <link rel='stylesheet' href='../css/styles.css'> -->
     </head>
