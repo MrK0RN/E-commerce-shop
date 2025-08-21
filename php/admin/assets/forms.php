@@ -7,5 +7,5 @@ if (isset($_GET["edit_id"])){
     $responce = pgQuery("SELECT * FROM ".$table_name." LIMIT 0;");
 }   
 
-var_dump(responce);
+var_dump($responce);
 ?>
