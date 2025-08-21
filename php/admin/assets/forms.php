@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fields = array_filter(array_keys($_POST), function($k) {
         return $k !== 'id' && $k !== 'created_at' && $k !== 'updated_at';
     });
-    $values = array_map(function($v) { return "'" . addslashes($v) . "'"; }, array_intersect_key(array_values($_POST), array_flip($fields)));
+    $values = array_map(function($k) { return "'" . addslashes($_POST[$k]) . "'"; }, $fields);
     if (isset($_GET["edit_id"])) {
         // Обновление записи
         $set = [];
