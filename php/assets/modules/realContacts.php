@@ -6,7 +6,7 @@ $g = pgQuery("SELECT * FROM contacts WHERE block = 'footer' AND sect = 'rc' AND 
 $cont = [
 	"address" => "fa-map-marker-alt",
 	"phone" => "fa-phone-alt",
-	"mail" => "fas fa-envelope"
+	"mail" => "fa-envelope"
 ]
 
 foreach ($g as $sc) {

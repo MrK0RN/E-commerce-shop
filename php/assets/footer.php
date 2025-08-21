@@ -33,7 +33,9 @@
 			<div class="footer-col">
 				<h3>Contact Info</h3>
 				<ul class="footer-links">
-					
+					<?php 
+						include "modules/realContacts.php";
+					?>
 				</ul>
 			</div>
 		</div>
