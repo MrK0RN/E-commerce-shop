@@ -7,7 +7,7 @@ $cont = [
 	"address" => "fa-map-marker-alt",
 	"phone" => "fa-phone-alt",
 	"mail" => "fa-envelope",
-	"working_hours" => "fa-clock"
+	"work_hours" => "fa-clock"
 ];
 
 foreach ($g as $cu) {
