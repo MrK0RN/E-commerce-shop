@@ -50,16 +50,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_GET["edit_id"])){
         $responce = pgQuery("SELECT * FROM ".$table_name." WHERE id = ".$_GET["edit_id"].";")[0];
         foreach ($responce as $key => $value) {
+            if ($key === 'id') continue;
             $text2 .= "<div class='form-group'>";
-            $text2 .= "<label for= '".$key."'>".$key."</label>";
+            $text2 .= "<label for='".$key."'>".$key."</label>";
             $text2 .= "<input type='text' id='".$key."' name='".$key."' class='form-control' value='".$value."' required>";
             $text2 .= "</div>";
         }    
     } else {
         $responce = pgQuery("SELECT column_name FROM information_schema.columns WHERE table_name = '".$table_name."';");
         foreach ($responce as $row) {
+            if ($row["column_name"] === 'id') continue;
             $text2 .= "<div class='form-group'>";
-            $text2 .= "<label for= '".$row["column_name"]."'>".$row["column_name"]."</label>";
+            $text2 .= "<label for='".$row["column_name"]."'>".$row["column_name"]."</label>";
             $text2 .= "<input type='text' id='".$row["column_name"]."' name='".$row["column_name"]."' class='form-control' placeholder='Enter your ".$row["column_name"]."' required>";
             $text2 .= "</div>";
         }    
