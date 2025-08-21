@@ -7,11 +7,14 @@ $text2 = "<div class='sidebar'>
 			</div>
 			<div class='sidebar-menu'>";
 
-$pages = ["Главная" => "index.php", 
-		  "Товары" => "goods.php", 
-		  "Заказы" => "orders.php",
-		  "Контакты" => "contacts.php",
-		  "Админы" => "admins.php"];
+$pages = [
+	"Главная" => "index.php", 
+	"Товары" => "goods.php", 
+	"Галерея товаров" => "products.php",
+	"Заказы" => "orders.php",
+	"Контакты" => "contacts.php",
+	"Админы" => "admins.php"
+];
 		
 	  
 foreach ($pages as $page => $address) {
