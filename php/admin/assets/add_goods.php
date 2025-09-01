@@ -1,4 +1,5 @@
 <?php
+include "../../system/db.php";
 $red = 0;
 if (isset($_GET["good_id"])){
     $red++;

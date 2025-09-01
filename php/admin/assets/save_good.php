@@ -46,7 +46,7 @@ try {
         pgQuery("DELETE FROM options WHERE good_id = $good_id;");
     } else {
         // Создание нового товара
-        $result = pgQuery("INSERT INTO goods (name, src_img, price) VALUES ('$name', '$src_img', '$price') RETURNING id;");
+        $result = pgQuery("INSERT INTO goods (name, src_img, price) VALUES ('$name', '$src_img', '$price') RETURNING id;, false, true");
         $good_id = $result[0]['id'];
     }
 
