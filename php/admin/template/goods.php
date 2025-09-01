@@ -11,7 +11,7 @@ foreach ($responce as $product){
         <div class="product-card">
             <div class="product-thumb">
                 <img src="'.
-                htmlspecialchars($product['main_image'] ?? 'assets/img/no-image.png').'" alt="">
+                htmlspecialchars($product['src_image'] ?? 'assets/img/no-image.png').'" alt="">
             </div>
             <div class="product-info">
                 <h2>'.htmlspecialchars($product['name']).'</h2>

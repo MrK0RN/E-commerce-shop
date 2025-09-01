@@ -1,7 +1,7 @@
 <section class="contact" id="contact">
     <div class="container">
         <div class="section-title">
-            <h2>Have Questions? Contact Us!</h2>
+            <font color="white"><h2>Have Questions? Contact Us!</h2></font>
             <p>Get in touch for a free consultation and quote</p>
         </div>
         <div class="contact-container">

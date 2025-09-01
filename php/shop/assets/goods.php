@@ -5,6 +5,10 @@ include "../system/db.php";
 $goods = pgQuery("SELECT * FROM goods;");
 
 foreach ($goods as $good){
+
+    $params = pgQuery("SELECT * FROM params WHERE good_id = ".$good["id"].";");
+    $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
+
     $text2 = '
     <div class="element-item">
         <div class="basic-wrapper">
@@ -20,21 +24,23 @@ foreach ($goods as $good){
                 <div class="params-and-options">
                     <div class="params-group">
                         <div class="params-header">Характеристики:</div>
-                        <ul class="params">
-                            <li>шириной до 11 800 мм</li>
-                            <li>высотой до 6 300 мм</li>
-                            <li>площадью до 50 м²</li>
+                        <ul class="params">';
+
+    foreach ($params as $param){
+        $text2 .= '<li>'.$param["text"].'<li>';
+    }
+
+    $text2 .= '
                         </ul>
                     </div>
                     
                     <div class="options-group">
-                        <div class="options__title">Опции:</div>
-                        <div class="option checked">
-                            <div>стальной сплошной профиль</div>
-                        </div>
-                        <div class="option checked">
-                            <div>стальной перфорированный профиль</div>
-                        </div>
+                        <div class="options__title">Опции:</div>';
+    foreach ($options as $option){
+        $text2 .= '<div class="option checked"><div>'.$option["text"].'</div></div>';
+    }
+
+    $text2 .= '
                     </div>
                 </div>
             </div>
