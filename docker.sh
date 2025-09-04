@@ -1,2 +1,4 @@
 docker compose down
-docker rmi slavaproject-app:latest
+docker rmi e-commerce-shop-app:latest
+git pull
+docker compose up -d
