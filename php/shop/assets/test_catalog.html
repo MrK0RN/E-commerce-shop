@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Рольставни — каталог</title>
+    <style>
+        :root{
+            --card-w:300px;          /* ширина карточки */
+            --ratio:1.6;              /* 8/5=1.6 */
+            --card-h:calc(var(--card-w) * var(--ratio));
+            --accent:#ff6b00;
+            --gray:#777;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;}
+        body{background:#f5f7fa;padding:40px;display:flex;flex-wrap:wrap;gap:30px;justify-content:center;}
+
+        /* ==========  сама карточка  ========== */
+        .card{
+            width:var(--card-w);
+            height:var(--card-h);
+            background:#fff;
+            border-radius:12px;
+            box-shadow:0 4px 18px rgba(0,0,0,.10);
+            display:flex;
+            flex-direction:column;
+            overflow:hidden;
+            position:relative;
+        }
+
+        /* 1. карусель 5:8 */
+        .carousel{height:48%;position:relative;}
+        .carousel .big{
+            width:100%;height:100%;
+            object-fit:cover;
+            display:block;
+        }
+        /* полоски-переключатели */
+        .triggers{
+            position:absolute;bottom:0;left:0;right:0;
+            height:28px;display:flex;
+        }
+        .triggers label{flex:1;height:100%;cursor:pointer;}
+        /* сами превью под курсором */
+        .triggers label::after{
+            content:'';display:block;width:100%;height:100%;
+            background-size:cover;background-position:center;filter:brightness(.85);
+            transition:filter .15s;
+        }
+        .triggers label:nth-of-type(1)::after{background-image:var(--i1);}
+        .triggers label:nth-of-type(2)::after{background-image:var(--i2);}
+        .triggers label:nth-of-type(3)::after{background-image:var(--i3);}
+        .triggers label:nth-of-type(4)::after{background-image:var(--i4);}
+        .triggers label:hover::after{filter:brightness(1);}
+
+        /* радиокнопки управляют картинкой */
+        .carousel input{display:none;}
+        .carousel input:nth-of-type(1):checked ~ .big{content:var(--i1);}
+        .carousel input:nth-of-type(2):checked ~ .big{content:var(--i2);}
+        .carousel input:nth-of-type(3):checked ~ .big{content:var(--i3);}
+        .carousel input:nth-of-type(4):checked ~ .big{content:var(--i4);}
+        /* fallback для старых браузеров – просто ставим background */
+        .carousel .big{background-size:cover;background-position:center;}
+        .carousel input:nth-of-type(1):checked ~ .big{background-image:var(--i1);}
+        .carousel input:nth-of-type(2):checked ~ .big{background-image:var(--i2);}
+        .carousel input:nth-of-type(3):checked ~ .big{background-image:var(--i3);}
+        .carousel input:nth-of-type(4):checked ~ .big{background-image:var(--i4);}
+
+        /* 2. название */
+        .title{padding:10px 14px 4px;font-size:17px;font-weight:700;line-height:1.25;}
+
+        /* 3. рейтинг */
+        .rating{padding:0 14px;display:flex;align-items:center;gap:6px;font-size:14px;color:var(--gray);}
+        .stars{color:#ffa723;font-size:15px;letter-spacing:1px;}
+
+        /* 4. цвета */
+        .colors{padding:8px 14px;display:flex;align-items:center;gap:8px;}
+        .color{
+            width:20px;height:20px;border-radius:50%;
+            border:1px solid rgba(0,0,0,.15);
+        }
+        .more{color:var(--gray);font-size:13px;margin-left:4px;}
+
+        /* 5-6. цены */
+        .prices{padding:4px 14px 8px;display:flex;align-items:baseline;gap:8px;}
+        .old{text-decoration:line-through;color:var(--gray);font-size:14px;}
+        .current{font-size:22px;font-weight:700;color:var(--accent);}
+
+        /* 7. доставка */
+        .delivery{
+            margin-top:auto;
+            padding:10px 14px 14px;
+            font-size:13px;color:var(--gray);
+        }
+        .delivery b{color:#222;}
+        .image-container{
+        position:relative;
+        width:100%;
+        height:100vh;
+        aspect-ratio: 300/284;
+        background-image:url('images/фото1.jpeg');   /* стартовое фото */
+        background-size:cover;
+        background-position:center;                                /* кол-во зон */
+        }
+        .hover-zone{
+        position:absolute;
+        top:0;
+        height:100%;
+        background:transparent;
+        cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========  КАРТОЧКА 1  ======== -->
+<div class="image-container" id="imageContainer"></div>
+    <!--<div class="carousel">
+        <input type="radio" name="c1" id="c1-1" checked>
+        <input type="radio" name="c1" id="c1-2">
+        <input type="radio" name="c1" id="c1-3">
+        <input type="radio" name="c1" id="c1-4">
+        <div class="big"></div>
+        <div class="triggers">
+            <label for="c1-1"></label>
+            <label for="c1-2"></label>
+            <label for="c1-3"></label>
+            <label for="c1-4"></label>
+        </div>
+    </div>
+-->
+    <div class="title">Рольставни «Стандарт» 60×180 см</div>
+
+    <div class="rating">
+        <span class="stars">★★★★☆</span>
+        <span>4.3</span>
+    </div>
+
+    <div class="colors">
+        <div class="color" style="background:#ffffff" title="Белый"></div>
+        <div class="color" style="background:#2b2b2b" title="Коричневый"></div>
+        <div class="color" style="background:#7b7b7b" title="Серый"></div>
+        <span class="more">+ ещё 7 цветов</span>
+    </div>
+
+    <div class="prices">
+        <span class="old">7 990 ₽</span>
+        <span class="current">6 490 ₽</span>
+    </div>
+
+    <div class="delivery">Доставка: <b>завтра</b> (бесплатно от 5 000 ₽)</div>
+</div>
+
+<!-- ========  КАРТОЧКА 2  ======== -->
+<div class="card" style="
+    --i1:url(https://i.ibb.co/qYpCg6d/z1.jpg);
+    --i2:url(https://i.ibb.co/3W3fFy1/z2.jpg);
+    --i3:url(https://i.ibb.co/6y0vM0t/z3.jpg);
+    --i4:url(https://i.ibb.co/3sV5pQ6/z4.jpg);
+">
+    <div class="carousel">
+        <input type="radio" name="c2" id="c2-1" checked>
+        <input type="radio" name="c2" id="c2-2">
+        <input type="radio" name="c2" id="c2-3">
+        <input type="radio" name="c2" id="c2-4">
+        <div class="big"></div>
+        <div class="triggers">
+            <label for="c2-1"></label>
+            <label for="c2-2"></label>
+            <label for="c2-3"></label>
+            <label for="c2-4"></label>
+        </div>
+    </div>
+
+    <div class="title">Рольставни «Премиум» с электроприводом</div>
+
+    <div class="rating">
+        <span class="stars">★★★★★</span>
+        <span>4.8</span>
+    </div>
+
+    <div class="colors">
+        <div class="color" style="background:#1c1c1c" title="Чёрный"></div>
+        <div class="color" style="background:#b99767" title="Золотой дуб"></div>
+        <div class="color" style="background:#c0c0c0" title="Серебро"></div>
+        <span class="more">+ ещё 12 цветов</span>
+    </div>
+
+    <div class="prices">
+        <!-- старой цены нет → пусто -->
+        <span class="current">18 900 ₽</span>
+    </div>
+
+    <div class="delivery">Доставка: <b>послезавтра</b> (установка в комплекте)</div>
+</div>
+
+<!-- ========  КАРТОЧКА 3  ======== -->
+<div class="card" style="
+    --i1:url(https://i.ibb.co/VYv8kQp/m1.jpg);
+    --i2:url(https://i.ibb.co/3MJfGLd/m2.jpg);
+    --i3:url(https://i.ibb.co/3s4V0pY/m3.jpg);
+    --i4:url(https://i.ibb.co/z5KsBrF/m4.jpg);
+">
+    <div class="carousel">
+        <input type="radio" name="c3" id="c3-1" checked>
+        <input type="radio" name="c3" id="c3-2">
+        <input type="radio" name="c3" id="c3-3">
+        <input type="radio" name="c3" id="c3-4">
+        <div class="big"></div>
+        <div class="triggers">
+            <label for="c3-1"></label>
+            <label for="c3-2"></label>
+            <label for="c3-3"></label>
+            <label for="c3-4"></label>
+        </div>
+    </div>
+
+    <div class="title">Рольставни «Мини» для окна 50×120 см</div>
+
+    <div class="rating">
+        <span class="stars">★★★★☆</span>
+        <span>4.1</span>
+    </div>
+
+    <div class="colors">
+        <div class="color" style="background:#ffffff" title="Белый"></div>
+        <div class="color" style="background:#d6a461" title="Дуб"></div>
+        <div class="color" style="background:#333333" title="Антрацит"></div>
+        <span class="more">+ ещё 4 цвета</span>
+    </div>
+
+    <div class="prices">
+        <span class="old">4 490 ₽</span>
+        <span class="current">3 990 ₽</span>
+    </div>
+
+    <div class="delivery">Доставка: <b>сегодня</b> (курьером за 3 ч.)</div>
+</div>
+
+</body>
+</html>

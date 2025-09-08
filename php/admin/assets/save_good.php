@@ -9,13 +9,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Получаем данные из формы
 $name = $_POST['name'] ?? '';
-$src_img = $_POST['src_img'] ?? '';
+$score = $_POST['score'] ?? '';
+$old_price = $_POST['old_price'] ?? '';
 $price = $_POST['price'] ?? '';
+$delivery = $_POST['delivery'] ?? '';
+$description = $_POST['description'] ?? '';
 $params = isset($_POST['params']) ? json_decode($_POST['params'], true) : [];
 $options = isset($_POST['options']) ? json_decode($_POST['options'], true) : [];
 
 // Проверяем обязательные поля
-if (empty($name) || empty($src_img) || empty($price)) {
+if (empty($name) || empty($price) || empty($old_price) || empty($delivery) || empty($description)) {
     echo json_encode(['success' => false, 'error' => 'Заполните все обязательные поля']);
     exit;
 }
@@ -39,14 +42,14 @@ if (isset($_GET['good_id']) && is_numeric($_GET['good_id'])) {
 try {
     if ($is_edit) {
         // Редактирование существующего товара
-        pgQuery("UPDATE goods SET name = '$name', src_img = '$src_img', price = '$price' WHERE id = $good_id;");
+        pgQuery("UPDATE goods SET name = '$name', score = '$score', old_price = '$old_price', price = '$price', delivery = '$delivery', description = '$description' WHERE id = $good_id;");
 
         // Удаляем старые характеристики и опции
         pgQuery("DELETE FROM params WHERE good_id = $good_id;");
         pgQuery("DELETE FROM options WHERE good_id = $good_id;");
     } else {
         // Создание нового товара
-        $result = pgQuery("INSERT INTO goods (name, src_img, price) VALUES ('$name', '$src_img', '$price') RETURNING id", false, true);
+        $result = pgQuery("INSERT INTO goods (name, score, old_price, price, delivery, description) VALUES ('$name', '$score', '$old_price', '$price', '$delivery', '$description') RETURNING id", false, true);
         $good_id = $result[0]['id'];
     }
 
@@ -67,6 +70,10 @@ try {
     }
 
     echo json_encode(['success' => true, 'good_id' => $good_id]);
+    $dir = "../../shop/images/".$good_id;          // имя папки
+    if (!is_dir($dir) && !$is_edit) {       // проверяем, нет ли её уже
+        mkdir($dir, 0777, true); // true = создать всю цепочку вложенных каталогов
+    }
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }

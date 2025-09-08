@@ -153,15 +153,31 @@ if (isset($_GET["good_id"])){
         </div>
 
         <div class="form-group">
-            <label for="src-img">Путь к изображению:</label>
-            <input type="text" id="src-img" value="<?php echo !empty($good['src_img']) ? $good['src_img'] : ''; ?>" required>
+            <label for="name">Рейтинг товара: (дробное число, необязательно)</label>
+            <input type="text" id="score" value="<?php echo !empty($good['score']) ? $good['score'] : ''; ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="price">Цена до скидки:</label>
+            <input type="text" id="old_price" value="<?php echo !empty($good['old_price']) ? $good['old_price'] : ''; ?>" required>
         </div>
 
         <div class="form-group">
             <label for="price">Цена:</label>
             <input type="text" id="price" value="<?php echo !empty($good['price']) ? $good['price'] : ''; ?>" required>
         </div>
+        
+        <div class="form-group">
+            <label for="price">Описание доставки: (например: сегодня (курьером за 3 ч.))</label>
+            <input type="text" id="delivery" value="<?php echo !empty($good['delivery']) ? $good['delivery'] : ''; ?>" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Описание товара:</label>
+            <textarea name="description" id="description"><?php echo !empty($good['description']) ? $good['description'] : ''; ?></textarea>
+        </div>
 
+    
         <div class="form-group">
             <label>Характеристики:</label>
             <div class="dynamic-items" id="params-container">
@@ -260,8 +276,11 @@ if (isset($_GET["good_id"])){
         <?php endif; ?>
 
         formData.append('name', document.getElementById('name').value);
-        formData.append('src_img', document.getElementById('src-img').value);
+        formData.append('score', document.getElementById('score').value);
+        formData.append('old_price', document.getElementById('old_price').value);
         formData.append('price', document.getElementById('price').value);
+        formData.append('delivery', document.getElementById('delivery').value);
+        formData.append('description', document.getElementById('description').value);
 
         const params = [];
         document.querySelectorAll('#params-container input').forEach(input => {

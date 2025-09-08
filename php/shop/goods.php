@@ -13,10 +13,11 @@
     ?>
 
     <div class="container">
+    
     <?php 
         include "assets/goods.php";
     ?>
-
+    </div>
     <?php
         include "footer.php";
     ?>

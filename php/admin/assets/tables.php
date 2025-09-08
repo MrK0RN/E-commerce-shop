@@ -7,7 +7,8 @@ $text2 = '
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/tables.css?v='.$ver.'">';
  
-$text2 .= '
+if ($add){
+	$text2 .= '
     <!-- Элементы управления таблицей -->
     <div class="table-controls">
         <input type="text" class="search-box" placeholder="Поиск...">
@@ -15,6 +16,8 @@ $text2 .= '
             <i class="fas fa-plus"></i> Добавить
         </a>
     </div>';
+}
+
 $tableHead = '<!-- Таблица -->
 	<table class="data-table">
 	<thead>
@@ -58,6 +61,13 @@ if (empty($responce)) {
 			$rowEnd .= '<button class="action-btn delete-btn" onclick="window.location.href=\'assets/delete.php?table_name='.$table_name.'&id='.$cur_id.'\'">
 								<i class="fas fa-trash"></i> Удалить
 							</button>';
+		}
+		if (isset($buttons)){
+			foreach ($buttons as $key => $value) {
+				$rowEnd .= '<button class="action-btn edit-btn" onclick="window.location.href=\''.$value.'?id='.$cur_id.'\'">
+								<i class="fas"></i> '.$key.'
+							</button>';
+			}
 		}
 		$rowEnd .= "</td>";
 
