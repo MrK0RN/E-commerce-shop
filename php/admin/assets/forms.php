@@ -21,10 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = pgQuery($sql);
         if ($result !== false) {
             echo "<div class='success'>Запись успешно обновлена! Перенаправление...</div>";
-            echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 3000);</script>";
+            echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 1000);</script>";
         } else {
             echo "<div class='error'>Ошибка при обновлении записи!</div>";
-            echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 3000);</script>";
+            echo "<script>setTimeout(function(){ window.location.href = '/admin'; }, 1000);</script>";
         }
     } else {
         // Вставка новой записи

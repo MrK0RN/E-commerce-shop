@@ -9,8 +9,8 @@ $text2 = "<div class='sidebar'>
 
 $pages = [
 	"Главная" => "index.php", 
-	"Товары" => "goods.php", 
-	"Галерея товаров" => "products.php",
+	"Каталог товаров" => "goods.php", 
+	"Подробные карточки товаров" => "products.php",
 	"Заказы" => "orders.php",
 	"Контакты" => "contacts.php",
 	"Админы" => "admins.php"

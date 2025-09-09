@@ -1,11 +1,11 @@
 <?php
 include "../../system/db.php";
 $red = 0;
-if (isset($_GET["good_id"])){
+if (isset($_GET["id"])){
     $red++;
-    $goods = pgQuery("SELECT * FROM goods WHERE id = ".$_GET["good_id"].";");
-    $params = pgQuery("SELECT * FROM params WHERE good_id = ".$_GET["good_id"].";");
-    $options = pgQuery("SELECT * FROM options WHERE good_id = ".$_GET["good_id"].";");
+    $goods = pgQuery("SELECT * FROM goods WHERE id = ".$_GET["id"].";");
+    $params = pgQuery("SELECT * FROM params WHERE good_id = ".$_GET["id"].";");
+    $options = pgQuery("SELECT * FROM options WHERE good_id = ".$_GET["id"].";");
 
     // Если товар найден, заполняем данные
     if (!empty($goods)) {
@@ -272,7 +272,7 @@ if (isset($_GET["good_id"])){
 
         const formData = new FormData();
         <?php if ($red && !empty($good)): ?>
-        formData.append('good_id', '<?php echo $_GET["good_id"]; ?>');
+        formData.append('good_id', '<?php echo $_GET["id"]; ?>');
         <?php endif; ?>
 
         formData.append('name', document.getElementById('name').value);
@@ -299,7 +299,7 @@ if (isset($_GET["good_id"])){
         formData.append('options', JSON.stringify(options));
 
         // Определяем URL для отправки
-        const url = 'save_good.php<?php echo ($red && !empty($good)) ? "?good_id=" . $_GET["good_id"] : ""; ?>';
+        const url = 'save_good.php<?php echo ($red && !empty($good)) ? "?good_id=" . $_GET["id"] : ""; ?>';
 
         fetch(url, {
             method: 'POST',
@@ -311,6 +311,7 @@ if (isset($_GET["good_id"])){
                     const message = <?php echo ($red && !empty($good)) ? "'Товар успешно отредактирован'" : "'Товар успешно создан'"; ?>;
                     showMessage(message, 'success');
 
+                    window.location.href = '/admin/goods.php';
                     // Если это создание, очищаем форму
                     if (!<?php echo ($red && !empty($good)) ? 'true' : 'false'; ?>) {
                         document.getElementById('create-form').reset();

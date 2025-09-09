@@ -11,9 +11,9 @@ $main = '
 $main .= '</div>';
 $table_name = "goods";
 $add = false;
-$edit = true;
+$edit = false;
 $delete = true;
-$buttons = ["Редактировать фото" => "assets/add_photos.php"];
+$buttons = ["Изменить" => "assets/add_goods.php", "Редактировать фото" => "assets/add_photos.php"];
 include "assets/tables.php";
 $main .= $text2;
 ?>
