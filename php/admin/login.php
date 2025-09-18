@@ -1,5 +1,5 @@
 <?php
-
+ini_set('display_errors', '0');
 session_start();
 if ($_SESSION["auth"] == True){
 	header("Location: index.php");

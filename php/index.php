@@ -9,15 +9,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/header.css">
 </head>
 <body>
-    <!-- Timer -->
-    <?php
-	include "assets/header.php";
-	?>
-    
+        <?php
+            include "assets/navHeader.php";
+        ?>
     <!-- Hero Section -->
     <section class="hero" id="home">
+        <?php
+            include "assets/header.php";
+        ?>
         <div class="hero-content">
             <h1>Premium Roller Shutters for Your Home & Business</h1>
             <p>Security, privacy and style in one complete solution</p>

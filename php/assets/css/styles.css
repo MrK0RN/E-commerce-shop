@@ -33,28 +33,6 @@ h1, h2, h3, h4 {
 	padding: 0 20px;
 }
 
-/* Header */
-header {
-	position: fixed;
-	width: 100%;
-	top: 0;
-	left: 0;
-	z-index: 1000;
-	background-color: rgba(255, 255, 255, 0.95);
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-	transition: all 0.3s ease;
-}
-
-header.scrolled {
-	background-color: rgba(255, 255, 255, 0.98);
-}
-
-nav {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 20px 0;
-}
 
 .logo {
 	font-size: 24px;
@@ -111,7 +89,7 @@ nav {
 .hero-content {
 	max-width: 800px;
 	margin: 0 auto;
-	padding: 0 20px;
+	padding: 0; /*20px*/
 }
 
 .hero h1 {
@@ -643,7 +621,7 @@ footer {
 }
 
 /* Responsive */
-@media (max-width: 992px) {
+@media (max-width: 700px) {
 	.nav-links {
 		position: fixed;
 		top: 80px;

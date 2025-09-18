@@ -19,10 +19,15 @@ CREATE TABLE IF NOT EXISTS admins (
 
 CREATE TABLE IF NOT EXISTS contacts (
     id SERIAL PRIMARY KEY,
-    data_name VARCHAR(12) NOT NULL,
-    data_value VARCHAR(100) NOT NULL,
-    block VARCHAR(100) NOT NULL,
-    sect VARCHAR(100) NOT NULL,
+    contact_name VARCHAR(12) NOT NULL,
+    contact_value VARCHAR(100) NOT NULL,
+    show_field VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS social_networks (
+    id SERIAL PRIMARY KEY,
+    social_network VARCHAR(12) NOT NULL,
+    link VARCHAR(100) NOT NULL,
     show_field VARCHAR(20) NOT NULL
 );
 
@@ -96,6 +101,13 @@ CREATE TABLE IF NOT EXISTS params (
     id SERIAL PRIMARY KEY,
     good_id INT NOT NULL,
     text VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS navHeader (
+    id SERIAL PRIMARY KEY,
+    page VARCHAR(100) NOT NULL,
+    page_link VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -1,7 +1,7 @@
 <?php
 
 //$responce, $add_src, $edit, $delete
-$table_name = "contacts";
+$table_name = "social_networks";
 $add = true;
 $edit = true;
 $delete = true;
@@ -11,20 +11,20 @@ $main = '<div class="social-reminder">
     <i class="fa-solid fa-triangle-exclamation"></i>
   </div>
   <div class="social-reminder__content">
-    <h4 class="social-reminder__title">Требуется настройка контактов</h4>
-    <p class="social-reminder__text">Для того чтобы все работало, создайте записи, для этого заполните эти contact_name и их contact_value:</p>
+    <h4 class="social-reminder__title">Требуется настройка социальных сетей</h4>
+    <p class="social-reminder__text">Для того чтобы все работало, создайте записи, для этого заполните эти social_network и их link:</p>
     <ul class="social-reminder__list">
       <li class="social-reminder__item">
-        <span>phone</span>
+        <span>meta</span>
       </li>
       <li class="social-reminder__item">
-        <span>work_hours</span>
+        <span>x</span>
       </li>
       <li class="social-reminder__item">
-        <span>address</span>
+        <span>instagram</span>
       </li>
       <li class="social-reminder__item">
-        <span>mail</span>
+        <span>linkedin</span>
       </li>
     </ul>
   </div>
@@ -122,6 +122,5 @@ $main = '<div class="social-reminder">
 
 <!-- Подключение Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
-
 $main .= $text2;
 ?>

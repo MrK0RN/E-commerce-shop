@@ -13,6 +13,7 @@ $pages = [
 	"Подробные карточки товаров" => "products.php",
 	"Заказы" => "orders.php",
 	"Контакты" => "contacts.php",
+	"Социальные сети" => "socNetworks.php",
 	"Админы" => "admins.php"
 ];
 		

@@ -29,7 +29,7 @@ if (!defined('DB_PHP_INCLUDED')) {
                 pg_close($connection);
                 return false;
             }
-
+            
             logger("server", "connection_is_requested", "SUCCESS");
             logger("server", "request_send", $sql);
 
@@ -50,6 +50,7 @@ if (!defined('DB_PHP_INCLUDED')) {
 
             if ($res) {
                 logger("server", "report", "data gathered");
+                log_db($sql);
             }
 
             pg_close($connection);

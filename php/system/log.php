@@ -13,9 +13,15 @@ function appendToFile($filename, $content) {
 
 function logger($author, $action, $log_text){
     $text = date(DATE_RFC2822)."|".$author.":".$action."->".$log_text;
+    include "dir.php";
     #echo $text."<br>";
-    appendToFile("logs.txt", $text);
+    appendToFile($logs, $text);
 }
 
+function log_db($log_text){
+    include "dir.php";
+    #echo $text."<br>";
+    appendToFile($dir, $log_text);
+}
 
 ?>

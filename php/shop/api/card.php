@@ -3,6 +3,50 @@ $id = $_GET["id"];
 $card_id = $_GET["card"];
 include "../../system/db.php";
 
+// Вспомогательная функция получения списка изображений для карточки
+function getCardImages($cardId) {
+    $cardImagesPath = "../cards/" . $cardId;
+    $images = [];
+    if (is_dir($cardImagesPath)) {
+        $files = scandir($cardImagesPath);
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..' && preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
+                $images[] = $file;
+            }
+        }
+        sort($images);
+    }
+    if (empty($images)) {
+        $fallbackPath = "../images/2";
+        if (is_dir($fallbackPath)) {
+            $files = scandir($fallbackPath);
+            foreach ($files as $file) {
+                if ($file != '.' && $file != '..' && preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
+                    $images[] = $file;
+                }
+            }
+            sort($images);
+            $cardImagesPath = $fallbackPath;
+        }
+    }
+    // Возвращаем абсолютные пути относительно текущей страницы
+    $fullPaths = [];
+    foreach ($images as $img) {
+        $fullPaths[] = $cardImagesPath . '/' . $img;
+    }
+    return $fullPaths;
+}
+
+// Легкий API для получения картинок по цвету/карточке
+if (isset($_GET['action']) && $_GET['action'] === 'images' && isset($_GET['card'])) {
+    header('Content-Type: application/json; charset=utf-8');
+    $cid = intval($_GET['card']);
+    echo json_encode([
+        'images' => getCardImages($cid)
+    ]);
+    exit;
+}
+
 $good = pgQuery('SELECT * FROM goods where id = '.$id.';')[0];
 $card = pgQuery('SELECT * FROM cards where id = '.$card_id.';')[0];
 $cards = pgQuery('SELECT * FROM cards where good_id = '.$id.';');
@@ -25,52 +69,21 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
                 <div class="gallery">
                     <div class="thumbnails">
                         <?php
-                        // Получаем все изображения из папки ../cards/$card
-                        $cardImagesPath = "../cards/" . $card['id'];
-                        $images = [];
-                        
-                        if (is_dir($cardImagesPath)) {
-                            $files = scandir($cardImagesPath);
-                            foreach ($files as $file) {
-                                if ($file != '.' && $file != '..' && preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
-                                    $images[] = $file;
-                                }
+                            $currentImages = getCardImages($card['id']);
+                            $firstImage = true;
+                            foreach ($currentImages as $index => $imagePath) {
+                                $activeClass = $firstImage ? ' active' : '';
+                                echo '<img src="' . $imagePath . '" alt="Thumbnail ' . ($index + 1) . '" class="thumbnail' . $activeClass . '" data-image="' . $imagePath . '">';
+                                $firstImage = false;
                             }
-                            // Сортируем изображения по имени
-                            sort($images);
-                        }
-                        
-                        // Если нет изображений в папке cards, используем изображения из папки images/2 как fallback
-                        if (empty($images)) {
-                            $fallbackPath = "../images/2";
-                            if (is_dir($fallbackPath)) {
-                                $files = scandir($fallbackPath);
-                                foreach ($files as $file) {
-                                    if ($file != '.' && $file != '..' && preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
-                                        $images[] = $file;
-                                    }
-                                }
-                                sort($images);
-                                $cardImagesPath = $fallbackPath;
-                            }
-                        }
-                        
-                        // Выводим миниатюры
-                        $firstImage = true;
-                        foreach ($images as $index => $image) {
-                            $imagePath = $cardImagesPath . '/' . $image;
-                            $activeClass = $firstImage ? ' active' : '';
-                            echo '<img src="' . $imagePath . '" alt="Thumbnail ' . ($index + 1) . '" class="thumbnail' . $activeClass . '" data-image="' . $imagePath . '">';
-                            $firstImage = false;
-                        }
                         ?>
                     </div>
                     <div class="main-image">
                         <span class="image-badge">Bestseller</span>
                         <?php
                         // Устанавливаем главное изображение (первое из списка)
-                        if (!empty($images)) {
-                            $mainImagePath = $cardImagesPath . '/' . $images[0];
+                        if (!empty($currentImages)) {
+                            $mainImagePath = $currentImages[0];
                             echo '<img src="' . $mainImagePath . '" alt="Main Product Image" id="main-image">';
                         } else {
                             // Fallback изображение, если нет картинок
@@ -126,11 +139,9 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
                     <div class="color-carousel">
                         <?php 
                         foreach ($cards as $cad){
-                            if ($cad["id"] == $card_id){
-                                echo '<div class="color-option active" style="background-color: '.$cad["color"].';" data-color="'.$cad["color"].'"></div>';
-                            } else {
-                                echo '<div class="color-option" style="background-color: '.$cad["color"].';" data-color="'.$cad["color"].'"></div>';
-                            }
+                            $isActive = ($cad["id"] == $card_id);
+                            $classes = $isActive ? 'color-option active' : 'color-option';
+                            echo '<div class="'.$classes.'" style="background-color: '.$cad["color"].';" data-color="'.$cad["color"].'" data-card-id="'.$cad["id"].'" data-price="'.$cad["price"].'"></div>';
                         }
                         ?>
                     </div>
@@ -143,7 +154,7 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
                 
                 <div class="price">
                     <div class="old-price">$<?=$good["old_price"]?></div>
-                    <div class="new-price">$<?=$good["price"]?> <span class="discount">-18%</span></div>
+                    <div class="new-price" id="current-price">$<?=$card["price"]?> <span class="discount">-18%</span></div>
                     <div class="price-note">Financing available from $249/month</div>
                 </div>
                 
@@ -269,41 +280,53 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
     </footer>
 
     <script>
-        // Обработка миниатюр
-        const thumbnails = document.querySelectorAll('.thumbnail');
+        // Галерея
+        const thumbnailsContainer = document.querySelector('.thumbnails');
+        let thumbnails = document.querySelectorAll('.thumbnail');
         const mainImage = document.getElementById('main-image');
-        
-        thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener('click', function() {
-                // Убираем активный класс у всех миниатюр
-                thumbnails.forEach(t => t.classList.remove('active'));
-                
-                // Добавляем активный класс к текущей миниатюре
-                this.classList.add('active');
-                
-                // Меняем основное изображение
-                mainImage.src = this.getAttribute('data-image');
-                mainImage.style.opacity = 0;
-                
-                setTimeout(() => {
-                    mainImage.style.opacity = 1;
-                }, 150);
+        function bindThumbnailClicks(){
+            thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumbnail => {
+                thumbnail.addEventListener('click', function() {
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    mainImage.src = this.getAttribute('data-image');
+                    mainImage.style.opacity = 0;
+                    setTimeout(() => { mainImage.style.opacity = 1; }, 150);
+                });
             });
-        });
+        }
+        bindThumbnailClicks();
         
         // Обработка выбора цвета
         const colorOptions = document.querySelectorAll('.color-option');
-        
+        const apiImages = '../api/card.php?action=images';
+        const currentPrice = document.getElementById('current-price');
         colorOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                // Убираем активный класс у всех вариантов цвета
+            option.addEventListener('click', async function() {
                 colorOptions.forEach(o => o.classList.remove('active'));
-                
-                // Добавляем активный класс к выбранному варианту
                 this.classList.add('active');
-                
-                // Здесь можно добавить логику изменения товара в зависимости от цвета
-                console.log('Выбран цвет: ' + this.getAttribute('data-color'));
+                const selectedCardId = this.getAttribute('data-card-id');
+                const price = this.getAttribute('data-price');
+                if (price && currentPrice){
+                    const discountHTML = currentPrice.querySelector('.discount')?.outerHTML || '';
+                    currentPrice.innerHTML = `$${price} ${discountHTML}`.trim();
+                }
+
+                try{
+                    const res = await fetch(`${apiImages}&card=${encodeURIComponent(selectedCardId)}`, { credentials: 'same-origin' });
+                    const data = await res.json();
+                    const images = Array.isArray(data.images) ? data.images : [];
+                    if (images.length){
+                        // обновляем главное изображение
+                        mainImage.src = images[0];
+                        // пересобираем превью
+                        thumbnailsContainer.innerHTML = images.map((src, idx) => `\n<img src="${src}" alt="Thumbnail ${idx+1}" class="thumbnail${idx===0?' active':''}" data-image="${src}">`).join('');
+                        bindThumbnailClicks();
+                    }
+                }catch(e){
+                    console.error(e);
+                }
             });
         });
         
