@@ -10,7 +10,7 @@ if (is_array($json) && ($json['action'] ?? null) === 'delete') {
         echo json_encode(['error' => 'no id']);
         exit;
     }
-    $dir = __DIR__ . "/../../data/cards/$id";
+    $dir = __DIR__ . "/../../data/categories/$id";
     if (!is_dir($dir)) @mkdir($dir, 0777, true);
     $file = basename($json['name'] ?? '');
     if ($file !== '') {
@@ -24,7 +24,7 @@ if (is_array($json) && ($json['action'] ?? null) === 'delete') {
 $id = intval($_POST['id'] ?? $_GET['id'] ?? 0);
 if (!$id) die(json_encode(['error' => 'no id']));
 
-$dir = __DIR__ . "/../../data/cards/$id";
+$dir = __DIR__ . "/../../data/categories/$id";
 if (!is_dir($dir)) @mkdir($dir, 0777, true);
 
 // загрузка

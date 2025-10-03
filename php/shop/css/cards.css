@@ -26,6 +26,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding-top: 190px;
 }
 
 .container {
@@ -499,16 +500,6 @@ header {
     color: white;
     border-color: var(--secondary);
 }
-
-footer {
-    margin-top: auto;
-    padding: 30px 0;
-    text-align: center;
-    color: var(--gray);
-    font-size: 14px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
 /* Анимации */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }

@@ -3,7 +3,7 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if (!$id) {
     die('Укажите ID товара: ?id=123');
 }
-$dir = __DIR__ . "/../../shop/cards/$id";
+$dir = __DIR__ . "/../../data/cards/$id";
 if (!is_dir($dir)) @mkdir($dir, 0777, true);
 $files = [];
 if (is_dir($dir)) {
@@ -54,7 +54,7 @@ if (is_dir($dir)) {
 <div class="photos">
     <?php foreach ($files as $f): ?>
         <div class="photo" data-name="<?= htmlspecialchars($f) ?>">
-            <img src="../../shop/cards/<?= $id ?>/<?= rawurlencode($f) ?>">
+            <img src="../../data/cards/<?= $id ?>/<?= rawurlencode($f) ?>">
             <button class="del">×</button>
         </div>
     <?php endforeach; ?>

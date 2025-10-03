@@ -1,16 +1,15 @@
 <?php
-
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if (!$id) {
     die('Укажите ID товара: ?id=123');
 }
-$dir = __DIR__ . "/../../data/images/$id";
+$dir = __DIR__ . "/../../data/categories/$id";
 if (!is_dir($dir)) @mkdir($dir, 0777, true);
 $files = [];
 if (is_dir($dir)) {
     $scan = @scandir($dir);
     if (is_array($scan)) {
-        $files = array_values(array_filter($scan, fn($f) => $f !== '.' && $f !== '..' && !is_dir("$dir/$f")));
+        $files = array_values(array_filter($scan, fn($f) => $f !== '.' && $f !== '..' && !is_dir("$dir/$f")));  
     }
 }
 ?>
@@ -46,7 +45,7 @@ if (is_dir($dir)) {
 <body>
 
 <div class="topbar">
-    <a href="../goods.php" class="btn btn-secondary">← Назад к товарам</a>
+    <a href="../categories.php" class="btn btn-secondary">← Назад к Категориям</a>
     <h2>Фото товара <?= htmlspecialchars($id) ?></h2>
     <span></span>
     <!-- spacer for alignment -->
@@ -55,14 +54,13 @@ if (is_dir($dir)) {
 <div class="photos">
     <?php foreach ($files as $f): ?>
         <div class="photo" data-name="<?= htmlspecialchars($f) ?>">
-            <img src="../../data/images/<?= $id ?>/<?= rawurlencode($f) ?>">
+            <img src="../../data/categories/<?= $id ?>/<?= rawurlencode($f) ?>">
             <button class="del">×</button>
         </div>
     <?php endforeach; ?>
 </div>
 
 <form id="drop" enctype="multipart/form-data">
-    <input type="hidden" name="MAX_FILE_SIZE" value="30000000" />
     <input type="file" name="files[]" multiple accept="image/*">
     <button type="submit">Загрузить</button>
 </form>
@@ -74,7 +72,7 @@ const id = <?= $id ?>;
 document.addEventListener('click', e => {
     if (!e.target.classList.contains('del')) return;
     const name = e.target.parentElement.dataset.name;
-    fetch('upload.php', {
+    fetch('upload3.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({action: 'delete', id, name})
@@ -86,7 +84,7 @@ document.getElementById('drop').addEventListener('submit', e => {
     e.preventDefault();
     const fd = new FormData(e.target);
     fd.append('id', id);
-    fetch('upload.php', {method: 'POST', body: fd})
+    fetch('upload3.php', {method: 'POST', body: fd})
         .then(() => location.reload());
 });
 </script>

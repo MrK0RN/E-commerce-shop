@@ -19,8 +19,9 @@
     ?>
     </div>
     <?php
-        include "footer.php";
-    ?>
+	include "../assets/brands.php";
+	include "../assets/footer.php";
+	?>
 
 </body>
 </html>

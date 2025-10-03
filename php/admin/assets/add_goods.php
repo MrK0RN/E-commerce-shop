@@ -146,6 +146,11 @@ if (isset($_GET["id"])){
         <?php if ($red && !empty($good)): ?>
             <input type="hidden" name="good_id" value="<?php echo $_GET['good_id']; ?>">
         <?php endif; ?>
+        
+        <div class="form-group">
+            <label for="name">Id Категории:</label>
+            <input type="text" id="category_id" value="<?php echo !empty($good['category_id']) ? $good['category_id'] : ''; ?>">
+        </div>
 
         <div class="form-group">
             <label for="name">Название товара:</label>
@@ -274,7 +279,8 @@ if (isset($_GET["id"])){
         <?php if ($red && !empty($good)): ?>
         formData.append('good_id', '<?php echo $_GET["id"]; ?>');
         <?php endif; ?>
-
+        
+        formData.append('category_id', document.getElementById('category_id').value);
         formData.append('name', document.getElementById('name').value);
         formData.append('score', document.getElementById('score').value);
         formData.append('old_price', document.getElementById('old_price').value);

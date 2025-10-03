@@ -1,5 +1,7 @@
 FROM php:8.1-apache
 
+COPY custom-php.ini /usr/local/etc/php/conf.d/custom.ini
+
 # Устанавливаем зависимости
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -30,11 +32,17 @@ RUN a2enmod rewrite headers
 
 # Создаем необходимые директории
 RUN mkdir -p /var/www/html/storage
+RUN mkdir -p /var/www/html/data \
+    && mkdir -p /var/www/html/mail/quotes \
+    && chown -R www-data:www-data /var/www/html/data \
+    && chown -R www-data:www-data /var/www/html/mail \
+    && chmod 755 /var/www/html/data \
+    && chmod 755 /var/www/html/mail/quotes
 
 # Копируем файлы проекта
 COPY . /var/www/html/
 
-# Базовая конфигурация Apache (без внешнего файла)
+# Базовая конфигурация Apache
 RUN echo "<VirtualHost *:80>\n\
     DocumentRoot /var/www/html\n\
     <Directory /var/www/html>\n\
@@ -50,8 +58,9 @@ RUN echo "<VirtualHost *:80>\n\
 RUN chown -R www-data:www-data /var/www/html \
     && find /var/www/html -type d -exec chmod 755 {} \; \
     && find /var/www/html -type f -exec chmod 644 {} \; \
-    && chmod -R 775 /var/www/html/storage
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/mail
 
 WORKDIR /var/www/html
-EXPOSE 80
+EXPOSE 8000
 CMD ["apache2-foreground"]

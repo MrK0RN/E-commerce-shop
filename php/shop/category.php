@@ -1,9 +1,16 @@
 <?php
 
-include "../../system/db.php";
 
-$responces = pgQuery('SELECT id FROM goods;');
+include "../system/db.php";
+if (!isset($_GET["id"])){
+    echo "<script>window.location.href=\"catalog.php\"</script>";
+}
+$categ = $_GET["id"];
+$responces = pgQuery('SELECT id FROM goods WHERE category_id = '.$categ.';');
 $jsonData = json_encode($responces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+$categoryData = pgQuery('SELECT * FROM categories WHERE id = '.$categ.';');
+$categoryName = !empty($categoryData) ? $categoryData[0]['name'] : 'Категория';
+$categoryDescription = !empty($categoryData) ? $categoryData[0]['description'] : '';
 ?>
 
 
@@ -11,7 +18,7 @@ $jsonData = json_encode($responces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS 
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Рольставни — каталог</title>
+    <title>Рольставни — <?php echo htmlspecialchars($categoryName); ?></title>
     <script>
         // Безопасная передача данных из PHP в JS
         window.phpData = <?php echo $jsonData; ?>;
@@ -25,7 +32,9 @@ $jsonData = json_encode($responces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS 
             --gray:#777;
         }
         *{box-sizing:border-box;margin:0;padding:0;}
-        body{background:#f5f7fa; padding-left:40px; padding-right:40px;}
+        body{
+            background: white;
+        }
 
         /* ==========  сама карточка  ========== */
         .card{
@@ -120,15 +129,50 @@ $jsonData = json_encode($responces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS 
         background:transparent;
         cursor:pointer;
         }
+        /* ========== Заголовок категории ========== */
+        .category-header {
+            margin-bottom: 40px;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            padding: 0 40px;
+            justify-content: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .category-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 15px;
+        }
+
+        .category-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--gray);
+            max-width: 800px;
+        }
     </style>
     
 </head>
-<body style="padding-top: 120px">
+<body style="padding-top: 200px">
     <?php
-    include "../../assets/header_black.php"
+    include "../assets/header_black.php"
     ?>
+    <div class="category-header">
+        <h1 class="category-title"><?php echo htmlspecialchars($categoryName); ?></h1>
+        <?php if (!empty($categoryDescription)): ?>
+            <div class="category-description"><?php echo htmlspecialchars($categoryDescription); ?></div>
+        <?php endif; ?>
+    </div>
+    <div style="max-width: 1200px;
+                margin: 0 auto 30px;
+                padding: 0 40px;
+                display: flex;
+                justify-content: left;" id="category-container"></div>
+
     <script>
-    const apiBase = '../api/renderCards.php';
+    const apiBase = 'api/renderCards.php';
     
     // Функция для инициализации hover-эффекта
     function initImageHover(container, id) {
@@ -175,8 +219,11 @@ $jsonData = json_encode($responces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS 
             }
             const wrapper = document.createElement('div');
             wrapper.className = 'card';
+            wrapper.addEventListener('click', function() {
+                window.location.href = 'card.php?id=' + id;
+            });
             wrapper.innerHTML = html;
-            document.body.appendChild(wrapper);
+            document.getElementById('category-container').appendChild(wrapper);
             
             // Инициализируем hover-эффект после добавления карточки
             const container = document.getElementById('imageContainer-' + id);
@@ -190,7 +237,7 @@ $jsonData = json_encode($responces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS 
 
     (function(){
         const sentinel = document.getElementById('sentinel');
-        const apiBase = '../api/renderCards.php';
+        const apiBase = 'api/renderCards.php';
         let nextId = 1;
         let isLoading = false;
         let reachedEnd = false;
@@ -201,5 +248,9 @@ $jsonData = json_encode($responces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS 
         })
     })();
     </script>
+    <?php
+	include "../assets/brands.php";
+	include "../assets/footer.php";
+	?>
 </body>
 </html>

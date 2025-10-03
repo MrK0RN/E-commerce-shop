@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   app:
-    build: ./php
+    build: ./python-app  # Новая папка с Python приложением
     ports:
-      - "8000:80"
+      - "8900:8900"
     depends_on:
       db:
         condition: service_healthy
@@ -16,9 +16,31 @@ services:
       DB_PORT: 5432
     networks:
       - app-network
+    volumes:
+      - ./python-app/mail:/app/mail  # Монтируем папку для сохранения данных
+
+  web:
+    build: ./php  # Старый PHP фронтенд
+    ports:
+      - "8000:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASS: secret
+      DB_NAME: app_db
+      DB_PORT: 5432
+      API_URL: http://app:8900
+    networks:
+      - app-network
+    volumes:
+      - ./php:/var/www/html
+      - app_data:/var/www/html/data
 
   db:
-    image: postgres:15  # Облегченная версия
+    image: postgres:15
     environment:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: postgres
@@ -36,18 +58,20 @@ services:
     ports:
       - "5432:5432"
 
-  phpmyadmin:
-    image: adminer  # Альтернатива phpMyAdmin для PostgreSQL
+  adminer:
+    image: adminer
     depends_on:
       db:
         condition: service_healthy
     ports:
-      - "8080:8080"
+      - "8081:8080"
     networks:
       - app-network
 
 volumes:
   postgres_data:
+    driver: local
+  app_data:
     driver: local
 
 networks:

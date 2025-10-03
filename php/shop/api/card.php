@@ -1,11 +1,10 @@
 <?php
 $id = $_GET["id"];
-$card_id = $_GET["card"];
+$card_id = $_GET["card"] ?? 1;
 include "../../system/db.php";
-
 // Вспомогательная функция получения списка изображений для карточки
 function getCardImages($cardId) {
-    $cardImagesPath = "../cards/" . $cardId;
+    $cardImagesPath = "../../data/cards/" . $cardId;
     $images = [];
     if (is_dir($cardImagesPath)) {
         $files = scandir($cardImagesPath);
@@ -60,9 +59,11 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профессиональная карточка товара</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/cards.css">
+    <link rel="stylesheet" href="../css/cards.css?v=1">
 </head>
 <body>
+    <?php
+    include "../../assets/header_black.php";?>
     <div class="container">
         <div class="product-card">
             <div class="left-column">

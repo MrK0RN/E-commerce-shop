@@ -2,7 +2,11 @@
 include "../auth.php";
 include "../../system/db.php";
 $table_name = $_GET["table_name"];
-
+function cleanAlphanumeric($string) {
+    // Оставляем буквы, цифры, пробелы и запятые
+    $string = preg_replace('/[^a-zA-Z0-9\s,]/', '', $string);
+    return trim(preg_replace('/\s+/', ' ', $string));
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Исключить из POST-обработки
     $fields = array_filter(array_keys($_POST), function($k) {

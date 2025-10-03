@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+
 // сначала пробуем обработать JSON-запрос на удаление,
 // т.к. для него id передается в теле JSON, а не в $_POST
 $raw = file_get_contents('php://input');
@@ -10,7 +10,7 @@ if (is_array($json) && ($json['action'] ?? null) === 'delete') {
         echo json_encode(['error' => 'no id']);
         exit;
     }
-    $dir = __DIR__ . "/../../shop/images/$id";
+    $dir = __DIR__ . "/../../data/images/$id";
     if (!is_dir($dir)) @mkdir($dir, 0777, true);
     $file = basename($json['name'] ?? '');
     if ($file !== '') {
@@ -24,7 +24,7 @@ if (is_array($json) && ($json['action'] ?? null) === 'delete') {
 $id = intval($_POST['id'] ?? $_GET['id'] ?? 0);
 if (!$id) die(json_encode(['error' => 'no id']));
 
-$dir = __DIR__ . "/../../shop/images/$id";
+$dir = __DIR__ . "/../../data/images/$id";
 if (!is_dir($dir)) @mkdir($dir, 0777, true);
 
 // загрузка

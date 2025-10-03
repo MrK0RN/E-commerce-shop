@@ -1,3 +1,32 @@
+<?php
+function getAllPhotos() {
+    $query = "SELECT * FROM photos ORDER BY created_at DESC";
+    $result = pgQuery($query);
+    
+    $photos = [];
+    foreach ($result as $row) {
+        $photos[] = $row;
+    }
+    
+    return $photos;
+}
+include "system/db.php";
+$query = "SELECT * FROM categories ORDER BY created_at DESC";
+$result = pgQuery($query);
+$files = [];
+$ids = [];
+foreach ($result as $id){
+    $dir = "data/categories/".$id['id']."/";
+    if (is_dir($dir)) {
+        $scan = @scandir($dir);
+        if (is_array($scan)) {
+            $ids[$id['id']] = $id["name"];
+            $files[$id['id']] = $dir . array_values(array_filter($scan, fn($f) => $f !== '.' && $f !== '..' && !is_dir("$dir/$f")))[0];
+        }
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,10 +37,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css?v=1234">
+    <link rel="stylesheet" href="assets/css/catalog_ind.css?v=1234">
     <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/header.css">
 </head>
 <body>
         <?php
@@ -23,56 +52,59 @@
             include "assets/header.php";
         ?>
         <div class="hero-content">
-            <h1>Premium Roller Shutters for Your Home & Business</h1>
+            <h1>Premium <span style="color: var(--accent)">Roller Shutters</span> for Your <span style="color: var(--accent)">Home</span> & <span style="color: var(--accent)">Business</span></h1>
             <p>Security, privacy and style in one complete solution</p>
             <div>
-                <a href="#contact" class="btn">Get a Free Quote</a>
+                <a href="shop/catalog.php" class="btn">Check Our Catalog</a>
                 <a href="#gallery" class="btn btn-secondary">View Gallery</a>
             </div>
         </div>
     </section>
-    
+    <section class="catalog-section">
+        <div class="container">
+            <div class="catalog-grid">
+            <?php foreach ($files as $key => $value): ?>
+                <div class="catalog-card" onclick="window.location.href='shop/category.php?id=<?=$key?>'">
+                <div class="card-image">
+                <img src="<?= $value ?>" alt="Название категории 1">
+                <div class="image-overlay"></div>
+                <div class="card-caption">
+                    <h3 class="category-title"><?= htmlspecialchars($ids[$key]) ?></h3>
+                </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="container">
-            <div class="section-title">
-                <h2>Why Choose Our Roller Shutters?</h2>
-                <p>We provide high-quality roller shutters with the latest technology and premium materials</p>
-            </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
+                        <img width=90px height=90px src="assets/image/docs.png"></img>
                     </div>
-                    <h3>Enhanced Security</h3>
-                    <p>Protection against break-ins and prying eyes with reinforced materials</p>
+                    <p><b>Enhanced Security</b><br><font size="2">Protection against break-ins and prying eyes with reinforced material</font></p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-sun"></i>
+                        <img width=100px height=90px src="assets/image/energy.webp"></img>
                     </div>
-                    <h3>Energy Efficiency</h3>
-                    <p>Reduce heat loss in winter and block excessive heat in summer</p>
+                    <p><b>Energy Efficiency</b><br><font size="2">Reduce heat loss in winter and block excessive heat in summer</font></p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-paint-brush"></i>
+                        <img width=100px height=90px src="assets/image/Lupa.png"></img>
                     </div>
-                    <h3>Modern Design</h3>
-                    <p>Contemporary solutions to match any architectural style</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-sliders-h"></i>
-                    </div>
-                    <h3>Smart Control</h3>
-                    <p>Choose between automatic or manual operation systems</p>
+                    <p><b>Quality Check</b><br><font size="2">Contemporary solutions to match any architectural style</font></p>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- Gallery Section -->
+    <?php
+    include "assets/quiz.php";
+    ?>
     <section class="gallery" id="gallery">
         <div class="container">
             <div class="section-title">
@@ -80,56 +112,50 @@
                 <p>See our roller shutters installed in real homes and businesses</p>
             </div>
             <div class="gallery-container">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80" alt="Roller Shutters">
-                    <div class="gallery-caption">
-                        <h3>Modern Villa</h3>
-                        <p>London, UK</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1600585152227-4f24156e55e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Roller Shutters">
-                    <div class="gallery-caption">
-                        <h3>Residential House</h3>
-                        <p>Manchester, UK</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80" alt="Roller Shutters">
-                    <div class="gallery-caption">
-                        <h3>Commercial Building</h3>
-                        <p>Birmingham, UK</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Roller Shutters">
-                    <div class="gallery-caption">
-                        <h3>Apartment Complex</h3>
-                        <p>Liverpool, UK</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Roller Shutters">
-                    <div class="gallery-caption">
-                        <h3>Retail Store</h3>
-                        <p>Leeds, UK</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Roller Shutters">
-                    <div class="gallery-caption">
-                        <h3>Office Building</h3>
-                        <p>Glasgow, UK</p>
-                    </div>
-                </div>
+    <?php
+    $photos = getAllPhotos();
+    define('UPLOAD_DIR', 'data/projects/images');
+        if (empty($photos)) {
+            $main .= '<p>Пока нет загруженных фотографий.</p>';
+        } else {
+            foreach ($photos as $photo) {
+                $main = '
+                    <div class="gallery-item">
+                        <img src="' . UPLOAD_DIR . htmlspecialchars($photo['filename']) . '" 
+                            alt="' . htmlspecialchars($photo['description']) . '">
+                        <div class="gallery-caption">
+                            <h3>' . htmlspecialchars($photo['description']) . '</h3>
+                        </div>
+                        </div> 
+                ';
+                echo $main;
+            }
+        }
+    ?>
             </div>
             <div class="gallery-btn">
-                <a href="#contact" class="btn">Get a Free Quote</a>
+                <a href="shop/catalog.php" class="btn">Get a Free Quote</a>
             </div>
         </div>
     </section>
-    
     <!-- FAQ Section -->
+    
+    
+    <!-- Testimonials -->
+    <?php
+	include "assets/feedback.php";
+	?>
+    
+    <!-- Brands -->
+    <?php
+	include "assets/brands.php";
+	?>
+    
+    <!-- Contact Section -->
+    <?php
+	include "assets/contactUs.php";
+	?>
+
     <section class="faq" id="faq">
         <div class="container">
             <div class="section-title">
@@ -185,27 +211,13 @@
             </div>
         </div>
     </section>
-    
-    <!-- Testimonials -->
-    <?php
-	include "assets/feedback.php";
-	?>
-    
-    <!-- Brands -->
-    <?php
-	include "assets/brands.php";
-	?>
-    
-    <!-- Contact Section -->
-    <?php
-	include "assets/contactUs.php";
-	?>
+
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
             <h2>Ready to Enhance Your Property?</h2>
             <p>Get premium roller shutters that combine security, energy efficiency and elegant design in one solution.</p>
-            <a href="#contact" class="btn">Get Your Free Quote Now</a>
+            <a href="shop/catalog.php" class="btn">Get Your Free Quote Now</a>
         </div>
     </section>
     
@@ -226,12 +238,13 @@
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
         
+        /*
         mobileMenuBtn.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? 
                 '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
         });
-        
+        */
         // Smooth Scrolling for Anchor Links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {

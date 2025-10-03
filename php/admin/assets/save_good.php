@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Получаем данные из формы
+$category_id = $_POST['category_id'] ?? '';
 $name = $_POST['name'] ?? '';
 $score = $_POST['score'] ?? '';
 $old_price = $_POST['old_price'] ?? '';
@@ -18,7 +19,7 @@ $params = isset($_POST['params']) ? json_decode($_POST['params'], true) : [];
 $options = isset($_POST['options']) ? json_decode($_POST['options'], true) : [];
 
 // Проверяем обязательные поля
-if (empty($name) || empty($price) || empty($old_price) || empty($delivery) || empty($description)) {
+if (empty($name) || empty($price) || empty($old_price) || empty($delivery) || empty($description) || empty($category_id)) {
     echo json_encode(['success' => false, 'error' => 'Заполните все обязательные поля']);
     exit;
 }
@@ -42,14 +43,14 @@ if (isset($_GET['good_id']) && is_numeric($_GET['good_id'])) {
 try {
     if ($is_edit) {
         // Редактирование существующего товара
-        pgQuery("UPDATE goods SET name = '$name', score = '$score', old_price = '$old_price', price = '$price', delivery = '$delivery', description = '$description' WHERE id = $good_id;");
+        pgQuery("UPDATE goods SET category_id = '$category_id', name = '$name', score = '$score', old_price = '$old_price', price = '$price', delivery = '$delivery', description = '$description' WHERE id = $good_id;");
 
         // Удаляем старые характеристики и опции
         pgQuery("DELETE FROM params WHERE good_id = $good_id;");
         pgQuery("DELETE FROM options WHERE good_id = $good_id;");
     } else {
         // Создание нового товара
-        $result = pgQuery("INSERT INTO goods (name, score, old_price, price, delivery, description) VALUES ('$name', '$score', '$old_price', '$price', '$delivery', '$description') RETURNING id", false, true);
+        $result = pgQuery("INSERT INTO goods (category_id, name, score, old_price, price, delivery, description) VALUES ('$category_id', '$name', '$score', '$old_price', '$price', '$delivery', '$description') RETURNING id", false, true);
         $good_id = $result[0]['id'];
     }
 

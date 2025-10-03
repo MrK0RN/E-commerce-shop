@@ -2,6 +2,7 @@
 
 include "../../system/db.php";
 
+$colors_amount = 3;
 $currency = "₽";
 
 $id = $_GET['id'];
@@ -24,7 +25,7 @@ $price = $good["price"];
 $delivery = $good["delivery"];
 
 
-$dir = __DIR__ . '/../images/'.$id; // Укажи путь к нужной папке
+$dir = __DIR__ . '/../../data/images/'.$id; // Укажи путь к нужной папке
 $fileList = "";
 
 if (is_dir($dir)) {
@@ -40,6 +41,8 @@ if (is_dir($dir)) {
     $fileList = implode('|;', $fileNames);
 }
 
+
+$colors = pgQuery("SELECT * FROM cards WHERE good_id = ".$id);
 ?>
 <input type="hidden" id="fileCount_<?=$id?>" value='<?=$fileList?>'>
 
@@ -51,10 +54,19 @@ if (is_dir($dir)) {
     </div>
 
     <div class="colors">
-        <div class="color" style="background:#ffffff" title="Белый"></div>
-        <div class="color" style="background:#2b2b2b" title="Коричневый"></div>
-        <div class="color" style="background:#7b7b7b" title="Серый"></div>
-        <span class="more">+ ещё 7 цветов</span>
+        <?php
+        if (count($colors) > $colors_amount){
+            for ($i = 0; $i < $colors_amount; $i++){
+                echo '<div class="color" style="background:'.$colors[$i]['color'].'" title="Белый"></div>';
+            }
+            echo '<span class="more">+ ещё '.(count($colors) - $colors_amount).' цветов</span>';
+        } else {
+            foreach ($colors as $color){
+                echo '<div class="color" style="background:'.$color['color'].'" title="Белый"></div>';
+            }
+        }
+            
+        ?>
     </div>
 
     <div class="prices">

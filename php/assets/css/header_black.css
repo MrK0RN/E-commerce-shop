@@ -1,3 +1,6 @@
+:root {
+	--text: #000000;
+}
 *{
     font-family: Geologica;
 }
@@ -56,7 +59,7 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: white;
+    color: var(--text);
     font-weight: 700;
     font-size: 22px;
     transition: all 0.3s ease;
@@ -86,7 +89,7 @@
 /* Блок 2: Карты */
 .maps-block_8as4bd {
     text-decoration: none;
-    color: white;
+    color: var(--text);
     transition: all 0.3s ease;
     padding: 10px 15px;
     border-radius: 12px;
@@ -149,12 +152,12 @@
 
 .rating-subtext_8as4bd {
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.8);
     font-weight: 400;
 }
 
 .reviews-link_8as4bd {
-    color: white;
+    color: var(--text);
     text-decoration: none;
     font-size: 15px;
     font-weight: 500;
@@ -180,7 +183,7 @@
 /* Блок 4: WhatsApp */
 .wa-block_8as4bd {
     text-decoration: none;
-    color: white;
+    color: var(--text);
     padding: 10px 15px;
     /* background: rgba(255, 255, 255, 0.1);*/
     border-radius: 12px;
@@ -211,11 +214,11 @@
 
 .wa-subtext_8as4bd {
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .wa-link_8as4bd {
-    color: white;
+    color: var(--text);
     text-decoration: none;
     font-size: 15px;
     font-weight: 500;
@@ -252,11 +255,11 @@
 
 .work-hours_8as4bd {
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .phone-link_8as4bd {
-    color: white;
+    color: var(--text);
     text-decoration: none;
     font-weight: 600;
     font-size: 17px;
@@ -269,7 +272,7 @@
 }
 
 .callback-link_8as4bd {
-    color: white;
+    color: var(--text);
     text-decoration: none;
     font-size: 15px;
     font-weight: 500;
@@ -499,10 +502,7 @@
 /* Обновленные стили для навигационного хедера */
 /* Исходное состояние (прозрачное с легким градиентом) */
 .nav-header_8as4bd.transparent {
-    background: linear-gradient(to bottom, 
-        rgba(0, 0, 0, 0.3) 0%, 
-        rgba(0, 0, 0, 0.1) 100%);
-    color: #ffffff;
+    color: var(--text);
     box-shadow: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -513,7 +513,6 @@
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     color: #2c3e50;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -556,7 +555,7 @@
     position: relative;
     padding: 12px 0;
     display: block;
-    font-family: 'Montserrat', sans-serif;
+    font-family: Geologica, 'Montserrat', sans-serif;
 }
 
 .nav-link_8as4bd::before {
@@ -663,7 +662,7 @@
 .mobile-menu .nav-link_8as4bd {
     font-size: 24px;
     font-weight: 300;
-    color: white;
+    color: var(--text);
     text-decoration: none;
     transition: all 0.3s ease;
     position: relative;
