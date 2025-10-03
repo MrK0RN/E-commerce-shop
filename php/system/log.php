@@ -1,14 +1,15 @@
 <?php 
 
 function appendToFile($filename, $content) {
+    $i = 1;
     // Открываем файл для добавления содержимого (режим 'a')
-    $file = fopen($filename, 'a');
+    //$file = fopen($filename, 'a');
     
     // Записываем содержимое
-    fwrite($file, $content . PHP_EOL); // PHP_EOL добавляет перенос строки
+    //fwrite($file, $content . PHP_EOL); // PHP_EOL добавляет перенос строки
     
     // Закрываем файл
-    fclose($file);
+    //fclose($file);
 }
 
 function logger($author, $action, $log_text){
