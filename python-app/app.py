@@ -19,7 +19,7 @@ SMTP_CONFIG = {
     'password': 'mbph ujko ssmh uzln',  # Замените на пароль приложения
     'from_email': 'aaakrasnykh@gmail.com',
     'from_name': 'Website Forms',
-    'to_email': 'aaakrasnykh@gmail.com',
+    'to_email': 'kiterick123@gmail.com',#kiterick123@gmail.com
     'to_name': 'Alexander Krasnykh'
 }
 
