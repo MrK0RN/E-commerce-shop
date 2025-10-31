@@ -59,7 +59,71 @@ $card = pgQuery('SELECT * FROM cards where id = '.$card_id.';')[0];
 $params = pgQuery("SELECT * FROM params WHERE good_id = ".$good["id"].";");
 $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
 
+function addOrderToDatabase($orderData) {
+    try {
+        $query = "
+            INSERT INTO orders (
+                product_name, color, size, base_price, size_addition, final_total,
+                first_name, last_name, phone, email, address, order_reference, created_at
+            ) VALUES ('".$orderData['product']."', '".$orderData['color']."', '".$orderData['size']."', ".$orderData['base_price'].", ".$orderData['size_addition'].", ".$orderData['final_total'].", '".$orderData['first_name']."', '".$orderData['last_name']."', '".$orderData['phone']."', '".$orderData['email']."', '".$orderData['address']."', '".$orderData['order_reference']."', NOW())
+        ";
+        
+        $result = pgQuery($query);
+        return $result !== false;
+        
+    } catch (Exception $e) {
+        error_log("Error adding order to database: " . $e->getMessage());
+        return false;
+    }
+}
 
+// Обработка AJAX запроса на создание заказа
+if (isset($_POST['action']) && $_POST['action'] === 'create_order') {
+    header('Content-Type: application/json; charset=utf-8');
+    
+    $orderData = [
+        'product' => $_POST['product'],
+        'color' => $_POST['color'],
+        'size' => $_POST['size'],
+        'base_price' => floatval($_POST['base_price']),
+        'size_addition' => floatval($_POST['size_addition']),
+        'final_total' => floatval($_POST['final_total']),
+        'first_name' => $_POST['first_name'],
+        'last_name' => $_POST['last_name'],
+        'phone' => $_POST['phone'],
+        'email' => $_POST['email'],
+        'address' => $_POST['address'],
+        'order_reference' => 'RS' . substr(time(), -6) . rand(100, 999)
+    ];
+    
+    $response = ['success' => false, 'message' => '', 'order_ref' => $orderData['order_reference']];
+    
+    // Добавляем заказ в БД
+    $dbSuccess = addOrderToDatabase($orderData);
+    
+    if ($dbSuccess) {
+        $response['success'] = true;
+        $response['message'] = 'Order successfully created';
+        
+        // Отправляем на почту (существующая логика)
+        try {
+            $mailResponse = file_get_contents('http://localhost:8900/mail/api', false, stream_context_create([
+                'http' => [
+                    'method' => 'POST',
+                    'header' => 'Content-Type: application/json',
+                    'content' => json_encode($orderData)
+                ]
+            ]));
+        } catch (Exception $e) {
+            error_log("Email sending failed: " . $e->getMessage());
+        }
+    } else {
+        $response['message'] = 'Error saving order to database';
+    }
+    
+    echo json_encode($response);
+    exit;
+}
 
 ?>
 <!DOCTYPE html>
@@ -955,6 +1019,7 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
 
             // Собрать данные
             const formData = {
+                action: 'create_order',
                 product: this.getCurrentCardName(),
                 color: this.getCurrentCardColor(),
                 size: this.getCurrentSizeName(),
@@ -965,8 +1030,7 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
                 last_name: document.getElementById('order-last-name').value.trim(),
                 phone: document.getElementById('order-phone').value.trim(),
                 email: document.getElementById('order-email').value.trim(),
-                address: document.getElementById('order-address').value.trim(),
-                timestamp: new Date().toISOString()
+                address: document.getElementById('order-address').value.trim()
             };
 
             // Показать индикатор загрузки
@@ -974,18 +1038,20 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
             this.submitBtn.textContent = 'Processing...';
 
             try {
-                const response = await fetch('http://localhost:8900/mail/api', {
+                const response = await fetch('', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: JSON.stringify(formData)
+                    body: new URLSearchParams(formData).toString()
                 });
 
-                if (response.ok) {
-                    this.showSuccessMessage();
+                const result = await response.json();
+
+                if (result.success) {
+                    this.showSuccessMessage(result.order_ref);
                 } else {
-                    throw new Error('Server error');
+                    throw new Error(result.message || 'Server error');
                 }
             } catch (error) {
                 console.error('Error submitting order:', error);
@@ -995,6 +1061,23 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
             }
         }
 
+        // И обновите showSuccessMessage:
+        showSuccessMessage(orderReference) {
+            this.popup.innerHTML = `
+                <div class="order-popup-content">
+                    <div class="order-popup-body" style="text-align: center; padding: 40px;">
+                        <div style="font-size: 48px; color: #4ade80; margin-bottom: 20px;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2>Order Submitted Successfully!</h2>
+                        <p>Thank you for your order. We will contact you within 15 minutes to confirm the details.</p>
+                        <p><strong>Order Reference: ${orderReference}</strong></p>
+                        <button class="order-btn-submit" onclick="location.reload()" style="margin-top: 20px;">Close</button>
+                    </div>
+                </div>
+            `;
+        }
+        /*
         showSuccessMessage() {
             this.popup.innerHTML = `
                 <div class="order-popup-content">
@@ -1009,7 +1092,7 @@ $options = pgQuery("SELECT * FROM options WHERE good_id = ".$good["id"].";");
                     </div>
                 </div>
             `;
-        }
+        }*/
     }
 
     // Инициализация при загрузке страницы

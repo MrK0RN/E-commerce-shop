@@ -37,6 +37,10 @@ if (empty($responce)) {
     foreach ($columns as $row) {
         $tableHead .= "<th>".$row["column_name"]."</th>";
     }
+    // Добавляем столбец размеров для таблицы goods
+    if ($table_name == 'goods') {
+        $tableHead .= "<th class='sizes-column'>Размеры</th>";
+    }
     $tableHead .= "<th>Действия</th></tr></thead><tbody>";
     $tableBody = '<tr><td colspan="'.(count($columns)+1).'" style="text-align:center;">Нет данных</td></tr>';
     $tableBody .= '</tbody></table>';
@@ -44,6 +48,10 @@ if (empty($responce)) {
 } else {
 	foreach ($responce[0] as $key => $value) {
 		$tableHead.= "<th>".$key."</th>";
+	}
+	// Добавляем столбец размеров для таблицы goods
+	if ($table_name == 'goods') {
+		$tableHead .= "<th class='sizes-column'>Размеры</th>";
 	}
 	$tableHead .= "<th>Действия</th>";
 	foreach ($responce as $unique) {
@@ -74,10 +82,38 @@ if (empty($responce)) {
 		foreach ($unique as $key => $value) {
 			if ($key == "status"){
 				$tableBody.= "<td><span class='status '".$value.">".$value."</span></td>";
+			} elseif ($key == "color") {
+				// Отображаем цветной кружок вместо HEX-значения
+				$tableBody.= "<td>
+					<div class='color-display'>
+						<div class='color-circle' style='background-color: ".$value.";'></div>
+						<span class='color-value'>".$value."</span>
+					</div>
+				</td>";
 			} else {
 				$tableBody.= "<td>".$value."</td>";
 			}
 		}
+		
+		// Добавляем ячейку с размерами для таблицы goods
+		if ($table_name == 'goods') {
+			$sizes = pgQuery("SELECT size_name, price_addition FROM sizes WHERE good_id = $cur_id ORDER BY size_name;");
+			$sizes_html = '';
+			if (!empty($sizes)) {
+				foreach ($sizes as $size) {
+					$addition_sign = $size['price_addition'] >= 0 ? '+' : '';
+					$price_class = $size['price_addition'] >= 0 ? 'positive' : 'negative';
+					$sizes_html .= '<div class="size-item">
+						<span class="size-name">'.$size['size_name'].'</span>
+						<span class="price-addition '.$price_class.'">'.$addition_sign.$size['price_addition'].' ₽</span>
+					</div>';
+				}
+			} else {
+				$sizes_html = '<span class="no-sizes">Нет размеров</span>';
+			}
+			$tableBody.= "<td class='sizes-cell'><div class='sizes-container'>".$sizes_html."</div></td>";
+		}
+		
 		$tableBody.= $rowEnd;
 		$tableBody.= "</tr>";
 	}

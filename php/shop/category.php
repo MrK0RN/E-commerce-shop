@@ -2,13 +2,8 @@
 
 
 include "../system/db.php";
-if (!isset($_GET["id"])){
-    echo "<script>window.location.href=\"catalog.php\"</script>";
-}
-$categ = $_GET["id"];
-$responces = pgQuery('SELECT id FROM goods WHERE category_id = '.$categ.';');
+$responces = pgQuery('SELECT id FROM goods;');
 $jsonData = json_encode($responces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
-$categoryData = pgQuery('SELECT * FROM categories WHERE id = '.$categ.';');
 $categoryName = !empty($categoryData) ? $categoryData[0]['name'] : 'Категория';
 $categoryDescription = !empty($categoryData) ? $categoryData[0]['description'] : '';
 ?>
@@ -47,6 +42,7 @@ $categoryDescription = !empty($categoryData) ? $categoryData[0]['description'] :
             flex-direction:column;
             overflow:hidden;
             position:relative;
+            margin-right: 4%;
         }
 
         /* 1. карусель 5:8 */
@@ -160,10 +156,7 @@ $categoryDescription = !empty($categoryData) ? $categoryData[0]['description'] :
     include "../assets/header_black.php"
     ?>
     <div class="category-header">
-        <h1 class="category-title"><?php echo htmlspecialchars($categoryName); ?></h1>
-        <?php if (!empty($categoryDescription)): ?>
-            <div class="category-description"><?php echo htmlspecialchars($categoryDescription); ?></div>
-        <?php endif; ?>
+        <h1 class="category-title">Catalog</h1>
     </div>
     <div style="max-width: 1200px;
                 margin: 0 auto 30px;

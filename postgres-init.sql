@@ -80,11 +80,10 @@ CREATE TABLE IF NOT EXISTS subscribers (
 
 CREATE TABLE IF NOT EXISTS goods (
     id SERIAL PRIMARY KEY,
-    category_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     score FLOAT,
-    old_price VARCHAR(100) NOT NULL,
-    price VARCHAR(100) NOT NULL,
+    old_price INTEGER NOT NULL,
+    price INTEGER NOT NULL,
     delivery VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -94,14 +93,14 @@ CREATE TABLE IF NOT EXISTS cards (
     id SERIAL PRIMARY KEY,
     good_id INT NOT NULL,
     color VARCHAR(10) NOT NULL,
-    price VARCHAR(100) NOT NULL,
+    price INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS params (
     id SERIAL PRIMARY KEY,
     good_id INT NOT NULL,
-    text VARCHAR(1000) NOT NULL UNIQUE,
+    text VARCHAR(1000) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -115,7 +114,7 @@ CREATE TABLE IF NOT EXISTS navHeader (
 CREATE TABLE IF NOT EXISTS options (
     id SERIAL PRIMARY KEY,
     good_id INT NOT NULL,
-    text VARCHAR(1000) NOT NULL UNIQUE,
+    text VARCHAR(1000) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -133,3 +132,34 @@ CREATE TABLE IF NOT EXISTS photos (
     description TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE sizes (
+    id SERIAL PRIMARY KEY,
+    good_id INTEGER NOT NULL REFERENCES goods(id) ON DELETE CASCADE,
+    size_name VARCHAR(50) NOT NULL,
+    price_addition TYPE INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    color VARCHAR(100),
+    size VARCHAR(100),
+    base_price DECIMAL(10,2) NOT NULL,
+    size_addition DECIMAL(10,2) DEFAULT 0,
+    final_total DECIMAL(10,2) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    order_reference VARCHAR(50) UNIQUE NOT NULL,
+    status VARCHAR(50) DEFAULT 'new',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_orders_email ON orders(email);
+CREATE INDEX idx_orders_reference ON orders(order_reference);
+CREATE INDEX idx_orders_created_at ON orders(created_at);

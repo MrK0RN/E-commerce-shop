@@ -6,6 +6,7 @@ if (isset($_GET["id"])){
     $goods = pgQuery("SELECT * FROM goods WHERE id = ".$_GET["id"].";");
     $params = pgQuery("SELECT * FROM params WHERE good_id = ".$_GET["id"].";");
     $options = pgQuery("SELECT * FROM options WHERE good_id = ".$_GET["id"].";");
+    $sizes = pgQuery("SELECT * FROM sizes WHERE good_id = ".$_GET["id"].";");
 
     // Если товар найден, заполняем данные
     if (!empty($goods)) {
@@ -76,11 +77,22 @@ if (isset($_GET["id"])){
             display: flex;
             align-items: center;
             margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .size-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
 
         .item input {
             flex-grow: 1;
-            margin-right: 10px;
         }
 
         .btn {
@@ -144,7 +156,7 @@ if (isset($_GET["id"])){
 
     <form id="create-form">
         <?php if ($red && !empty($good)): ?>
-            <input type="hidden" name="good_id" value="<?php echo $_GET['good_id']; ?>">
+            <input type="hidden" name="good_id" value="<?php echo $_GET['id']; ?>">
         <?php endif; ?>
         
         <div class="form-group">
@@ -182,7 +194,31 @@ if (isset($_GET["id"])){
             <textarea name="description" id="description"><?php echo !empty($good['description']) ? $good['description'] : ''; ?></textarea>
         </div>
 
-    
+        <!-- Секция размеров -->
+        <div class="form-group">
+            <label>Размеры и надбавки к цене:</label>
+            <div class="dynamic-items" id="sizes-container">
+                <?php
+                if ($red && !empty($sizes)) {
+                    foreach ($sizes as $size) {
+                        echo '<div class="size-item">
+                                <input type="text" name="size_names[]" placeholder="Название размера" value="' . htmlspecialchars($size["size_name"]) . '">
+                                <input type="number" name="price_additions[]" placeholder="Надбавка к цене" value="' . htmlspecialchars($size["price_addition"]) . '" step="0.01">
+                                <button type="button" class="btn btn-danger" onclick="removeSize(this)">Удалить</button>
+                              </div>';
+                    }
+                } else {
+                    echo '<div class="size-item">
+                            <input type="text" name="size_names[]" placeholder="Название размера">
+                            <input type="number" name="price_additions[]" placeholder="Надбавка к цене" step="0.01">
+                            <button type="button" class="btn btn-danger" onclick="removeSize(this)">Удалить</button>
+                          </div>';
+                }
+                ?>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addSize()">Добавить размер</button>
+        </div>
+
         <div class="form-group">
             <label>Характеристики:</label>
             <div class="dynamic-items" id="params-container">
@@ -262,11 +298,32 @@ if (isset($_GET["id"])){
         container.appendChild(div);
     }
 
-    // Удаление элемента
+    // Добавление размеров
+    function addSize() {
+        const container = document.getElementById('sizes-container');
+        const div = document.createElement('div');
+        div.className = 'size-item';
+        div.innerHTML = `
+                <input type="text" name="size_names[]" placeholder="Название размера">
+                <input type="number" name="price_additions[]" placeholder="Надбавка к цене" step="0.01">
+                <button type="button" class="btn btn-danger" onclick="removeSize(this)">Удалить</button>
+            `;
+        container.appendChild(div);
+    }
+
+    // Удаление элемента характеристик/опций
     function removeItem(button) {
         // Не позволяем удалить последнее поле
         const container = button.closest('.dynamic-items');
         if (container.querySelectorAll('.item').length > 1) {
+            button.parentElement.remove();
+        }
+    }
+
+    // Удаление элемента размеров
+    function removeSize(button) {
+        const container = document.getElementById('sizes-container');
+        if (container.querySelectorAll('.size-item').length > 1) {
             button.parentElement.remove();
         }
     }
@@ -287,6 +344,24 @@ if (isset($_GET["id"])){
         formData.append('price', document.getElementById('price').value);
         formData.append('delivery', document.getElementById('delivery').value);
         formData.append('description', document.getElementById('description').value);
+
+        // Собираем данные о размерах
+        const sizes = [];
+        const sizeNames = document.querySelectorAll('input[name="size_names[]"]');
+        const priceAdditions = document.querySelectorAll('input[name="price_additions[]"]');
+        
+        for (let i = 0; i < sizeNames.length; i++) {
+            const sizeName = sizeNames[i].value.trim();
+            const priceAddition = priceAdditions[i].value.trim();
+            
+            if (sizeName !== '' && priceAddition !== '') {
+                sizes.push({
+                    size_name: sizeName,
+                    price_addition: parseFloat(priceAddition)
+                });
+            }
+        }
+        formData.append('sizes', JSON.stringify(sizes));
 
         const params = [];
         document.querySelectorAll('#params-container input').forEach(input => {
@@ -323,8 +398,10 @@ if (isset($_GET["id"])){
                         document.getElementById('create-form').reset();
                         document.getElementById('params-container').innerHTML = '';
                         document.getElementById('options-container').innerHTML = '';
+                        document.getElementById('sizes-container').innerHTML = '';
                         addParam();
                         addOption();
+                        addSize();
                     }
                 } else {
                     showMessage('Ошибка: ' + result.error, 'error');

@@ -17,6 +17,7 @@ $delivery = $_POST['delivery'] ?? '';
 $description = $_POST['description'] ?? '';
 $params = isset($_POST['params']) ? json_decode($_POST['params'], true) : [];
 $options = isset($_POST['options']) ? json_decode($_POST['options'], true) : [];
+$sizes = isset($_POST['sizes']) ? json_decode($_POST['sizes'], true) : [];
 
 // Проверяем обязательные поля
 if (empty($name) || empty($price) || empty($old_price) || empty($delivery) || empty($description) || empty($category_id)) {
@@ -45,13 +46,24 @@ try {
         // Редактирование существующего товара
         pgQuery("UPDATE goods SET category_id = '$category_id', name = '$name', score = '$score', old_price = '$old_price', price = '$price', delivery = '$delivery', description = '$description' WHERE id = $good_id;");
 
-        // Удаляем старые характеристики и опции
+        // Удаляем старые характеристики, опции и размеры
         pgQuery("DELETE FROM params WHERE good_id = $good_id;");
         pgQuery("DELETE FROM options WHERE good_id = $good_id;");
+        pgQuery("DELETE FROM sizes WHERE good_id = $good_id;");
     } else {
         // Создание нового товара
         $result = pgQuery("INSERT INTO goods (category_id, name, score, old_price, price, delivery, description) VALUES ('$category_id', '$name', '$score', '$old_price', '$price', '$delivery', '$description') RETURNING id", false, true);
         $good_id = $result[0]['id'];
+    }
+
+    // Добавляем размеры
+    foreach ($sizes as $size) {
+        $size_name = trim($size['size_name']);
+        $price_addition = floatval($size['price_addition']);
+        
+        if (!empty($size_name) && $price_addition >= 0) {
+            pgQuery("INSERT INTO sizes (good_id, size_name, price_addition) VALUES ($good_id, '$size_name', $price_addition);");
+        }
     }
 
     // Добавляем характеристики
@@ -78,4 +90,6 @@ try {
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
+
+#psql -U app_user -d app_db -c "CREATE TABLE sizes (id SERIAL PRIMARY KEY, good_id INTEGER NOT NULL REFERENCES goods(id) ON DELETE CASCADE, size_name VARCHAR(50) NOT NULL, price_addition DECIMAL(10,2) NOT NULL DEFAULT 0.00, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);"
 ?>
