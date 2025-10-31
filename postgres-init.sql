@@ -137,7 +137,7 @@ CREATE TABLE sizes (
     id SERIAL PRIMARY KEY,
     good_id INTEGER NOT NULL REFERENCES goods(id) ON DELETE CASCADE,
     size_name VARCHAR(50) NOT NULL,
-    price_addition TYPE INTEGER NOT NULL DEFAULT 0,
+    price_addition INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -159,7 +159,3 @@ CREATE TABLE orders (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE INDEX idx_orders_email ON orders(email);
-CREATE INDEX idx_orders_reference ON orders(order_reference);
-CREATE INDEX idx_orders_created_at ON orders(created_at);
