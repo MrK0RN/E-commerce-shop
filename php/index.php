@@ -11,12 +11,12 @@ function getAllPhotos() {
     return $photos;
 }
 include "system/db.php";
-$query = "SELECT * FROM categories ORDER BY created_at DESC";
+$query = "SELECT * FROM goods ORDER BY created_at DESC";
 $result = pgQuery($query);
 $files = [];
 $ids = [];
 foreach ($result as $id){
-    $dir = "data/categories/".$id['id']."/";
+    $dir = "data/images/".$id['id']."/";
     if (is_dir($dir)) {
         $scan = @scandir($dir);
         if (is_array($scan)) {
@@ -223,7 +223,7 @@ foreach ($result as $id){
     
     <!-- Footer -->
     <?php
-	include "assets/footer.php";
+	    include "assets/footer.php";
 	?>
     
     <!-- Chat Widget -->
